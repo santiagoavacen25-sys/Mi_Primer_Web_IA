@@ -1,19 +1,23 @@
 import streamlit as st
 
-# 1. Título principal con un emoji genial
-st.title("🤖 Mi Primera Web Inteligente")
+# Configuración de la pestaña en el navegador
+st.set_page_config(page_title="Mi Primera Web IA", page_icon="🚀", layout="centered")
 
-# 2. Un texto de bienvenida
-st.write("¡Hola! Esta es una página web real interactiva creada desde cero.")
+# Barra lateral (Sidebar)
+st.sidebar.title("⚙️ Panel de Control")
+nombre = st.sidebar.text_input("¿Cómo te llamas?", "Santiago")
+st.sidebar.write(f"¡Hola, {nombre}! 👋")
 
-# 3. La caja de texto mágica (guarda lo que el usuario escribe)
-nombre = st.text_input("Introduce tu nombre para iniciar el sistema:")
+# Contenido principal
+st.title("🚀 Mi Primera App Web con IA")
+st.write("¡Bienvenido a mi sitio web interactivo publicado en internet!")
 
-# 4. Un condicional: SI el usuario escribe su nombre, pasan cosas
-if nombre:
-    st.success(f"¡Acceso concedido, {nombre}! 🚀")
-    
-    # Agregamos un botón interactivo
-    if st.button("Haz clic aquí para ver una sorpresa"):
-        st.balloons()  # ¡Esto va a lanzar una animación en toda tu pantalla!
-        st.write("¡Boom! Acabas de activar una función web con solo un clic.")
+st.divider()
+
+# Sección interactiva
+st.subheader("💡 Interacción rápida")
+mensaje = st.text_input("Escribe un mensaje para la app:", "¡Python y Streamlit están geniales!")
+
+if st.button("Procesar mensaje"):
+    st.success(f"Procesado con éxito: **{mensaje.upper()}**")
+    st.balloons()  # ¡Efecto de globos en pantalla!
