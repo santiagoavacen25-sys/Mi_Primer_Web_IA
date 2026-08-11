@@ -1,36 +1,47 @@
 import streamlit as st
 
-st.set_page_config(page_title="App con Listas", page_icon="📋")
+st.set_page_config(page_title="Gestor de Perfiles", page_icon="🎮")
 
-st.title("📋 Registro de Tareas o Historial")
+st.title("🎮 Registro de Jugadores")
 
-# Inicializamos una lista en la memoria de la sesión si no existe
-if "lista_datos" not in st.session_state:
-    st.session_state["lista_datos"] = []
+# Inicializar la lista de diccionarios
+if "jugadores" not in st.session_state:
+    st.session_state["jugadores"] = []
 
-# Entrada de datos
-nuevo_item = st.text_input("Escribe un elemento para agregar a la lista:")
+# Formulario para capturar varios datos a la vez
+with st.form("formulario_jugador"):
+    nombre = st.text_input("Nombre de usuario:")
+    juego = st.selectbox("Juego favorito:", ["Fortnite", "Rocket League", "Minecraft", "Roblox"])
+    plataforma = st.radio("Plataforma:", ["PC", "PlayStation 5", "Otro"])
+    
+    enviado = st.form_submit_button("Guardar Registro")
 
-if st.button("Guardar en la lista"):
-    if nuevo_item.strip() != "":
-        # Agregamos el elemento a la lista
-        st.session_state["lista_datos"].append(nuevo_item)
-        st.success(f"'{nuevo_item}' agregado correctamente.")
+if enviado:
+    if nombre.strip() != "":
+        # Creamos un DICCIONARIO con todos los datos
+        nuevo_jugador = {
+            "nombre": nombre,
+            "juego": juego,
+            "plataforma": plataforma
+        }
+        # Guardamos el diccionario dentro de la lista
+        st.session_state["jugadores"].append(nuevo_jugador)
+        st.success(f"¡Perfil de {nombre} registrado!")
     else:
-        st.warning("Escribe algo antes de guardar.")
+        st.warning("Escribe un nombre de usuario.")
 
 st.divider()
 
-# Mostrar la lista en pantalla
-st.subheader("📜 Elementos guardados:")
+# Mostrar la lista de diccionarios
+st.subheader("📋 Lista de Registrados:")
 
-if len(st.session_state["lista_datos"]) > 0:
-    for i, item in enumerate(st.session_state["lista_datos"], 1):
-        st.write(f"**{i}.** {item}")
+if len(st.session_state["jugadores"]) > 0:
+    for i, p in enumerate(st.session_state["jugadores"], 1):
+        # Accedemos a los valores usando las claves del diccionario: p["clave"]
+        st.write(f"**{i}. {p['nombre']}** — Juega a *{p['juego']}* en *{p['plataforma']}*")
 else:
-    st.info("La lista está vacía actualmente.")
+    st.info("No hay ningún jugador registrado aún.")
 
-# Botón para limpiar
-if st.button("Limpiar lista"):
-    st.session_state["lista_datos"] = []
+if st.button("Borrar todos los registros"):
+    st.session_state["jugadores"] = []
     st.rerun()
