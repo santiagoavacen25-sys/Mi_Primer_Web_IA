@@ -1,23 +1,36 @@
 import streamlit as st
 
-# Configuración de la pestaña en el navegador
-st.set_page_config(page_title="Mi Primera Web IA", page_icon="🚀", layout="centered")
+st.set_page_config(page_title="App con Listas", page_icon="📋")
 
-# Barra lateral (Sidebar)
-st.sidebar.title("⚙️ Panel de Control")
-nombre = st.sidebar.text_input("¿Cómo te llamas?", "Santiago")
-st.sidebar.write(f"¡Hola, {nombre}! 👋")
+st.title("📋 Registro de Tareas o Historial")
 
-# Contenido principal
-st.title("🚀 Mi Primera App Web con IA")
-st.write("¡Bienvenido a mi sitio web interactivo publicado en internet!")
+# Inicializamos una lista en la memoria de la sesión si no existe
+if "lista_datos" not in st.session_state:
+    st.session_state["lista_datos"] = []
+
+# Entrada de datos
+nuevo_item = st.text_input("Escribe un elemento para agregar a la lista:")
+
+if st.button("Guardar en la lista"):
+    if nuevo_item.strip() != "":
+        # Agregamos el elemento a la lista
+        st.session_state["lista_datos"].append(nuevo_item)
+        st.success(f"'{nuevo_item}' agregado correctamente.")
+    else:
+        st.warning("Escribe algo antes de guardar.")
 
 st.divider()
 
-# Sección interactiva
-st.subheader("💡 Interacción rápida")
-mensaje = st.text_input("Escribe un mensaje para la app:", "¡Python y Streamlit están geniales!")
+# Mostrar la lista en pantalla
+st.subheader("📜 Elementos guardados:")
 
-if st.button("Procesar mensaje"):
-    st.success(f"Procesado con éxito: **{mensaje.upper()}**")
-    st.balloons()  # ¡Efecto de globos en pantalla!
+if len(st.session_state["lista_datos"]) > 0:
+    for i, item in enumerate(st.session_state["lista_datos"], 1):
+        st.write(f"**{i}.** {item}")
+else:
+    st.info("La lista está vacía actualmente.")
+
+# Botón para limpiar
+if st.button("Limpiar lista"):
+    st.session_state["lista_datos"] = []
+    st.rerun()
