@@ -1,14 +1,28 @@
 import streamlit as st
 
-st.set_page_config(page_title="Gestor de Perfiles", page_icon="🎮")
+st.set_page_config(page_title="Gestor de Perfiles", page_icon="🎮", layout="centered")
 
 st.title("🎮 Registro de Jugadores")
 
-# Inicializar la lista de diccionarios
+# Inicializar la lista
 if "jugadores" not in st.session_state:
     st.session_state["jugadores"] = []
 
-# Formulario para capturar varios datos a la vez
+# --- PANEL DE MÉTRICAS / ESTADÍSTICAS ---
+st.subheader("📊 Estadísticas en vivo")
+
+total = len(st.session_state["jugadores"])
+pc_count = sum(1 for p in st.session_state["jugadores"] if p["plataforma"] == "PC")
+ps5_count = sum(1 for p in st.session_state["jugadores"] if p["plataforma"] == "PlayStation 5")
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Jugadores", total)
+col2.metric("En PC 💻", pc_count)
+col3.metric("En PS5 🎮", ps5_count)
+
+st.divider()
+
+# --- FORMULARIO DE REGISTRO ---
 with st.form("formulario_jugador"):
     nombre = st.text_input("Nombre de usuario:")
     juego = st.selectbox("Juego favorito:", ["Fortnite", "Rocket League", "Minecraft", "Roblox"])
@@ -18,26 +32,22 @@ with st.form("formulario_jugador"):
 
 if enviado:
     if nombre.strip() != "":
-        # Creamos un DICCIONARIO con todos los datos
         nuevo_jugador = {
             "nombre": nombre,
             "juego": juego,
             "plataforma": plataforma
         }
-        # Guardamos el diccionario dentro de la lista
         st.session_state["jugadores"].append(nuevo_jugador)
         st.success(f"¡Perfil de {nombre} registrado!")
+        st.rerun()  # Actualiza los contadores de arriba al instante
     else:
         st.warning("Escribe un nombre de usuario.")
 
-st.divider()
-
-# Mostrar la lista de diccionarios
+# --- LISTA DE REGISTRADOS ---
 st.subheader("📋 Lista de Registrados:")
 
-if len(st.session_state["jugadores"]) > 0:
+if total > 0:
     for i, p in enumerate(st.session_state["jugadores"], 1):
-        # Accedemos a los valores usando las claves del diccionario: p["clave"]
         st.write(f"**{i}. {p['nombre']}** — Juega a *{p['juego']}* en *{p['plataforma']}*")
 else:
     st.info("No hay ningún jugador registrado aún.")
