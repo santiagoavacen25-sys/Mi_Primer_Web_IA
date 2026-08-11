@@ -6,5 +6,5 @@ nombre= st.text_input("Escribe tu juego favorito:")
 plataforma = st.text_input("Escribe tu plataforma:")
 
 if st.button("Mostrar juego"):
-    st.write(f"Tu juego favorito es: {nombre}")
+    st.write(f"Juegas {nombre} en {plataforma}")
     
