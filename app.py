@@ -8,7 +8,8 @@ plataforma = st.selectbox("Selecciona tu plataforma:", ["PC", "PlayStation 5", "
 if st.button("Mostrar juego"):
     st.write(f"Juegas {nombre} en {plataforma}")
     
-    # Agregamos esta decisión rápida
     if plataforma == "PC":
         st.success("¡Master Race! Buena elección de plataforma.")
+    else:
+        st.info("¡Buena plataforma de consola para jugar cómodo!")
     
