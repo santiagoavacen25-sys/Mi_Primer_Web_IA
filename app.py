@@ -31,3 +31,16 @@ if st.session_state.historial:
     if st.button("🗑️ Limpiar historial"):
         st.session_state.historial = []
         st.rerun()
+        
+# Reemplaza la sección del botón en tu app.py por esta:
+if st.button("Calcular y guardar estadísticas"):
+    horas_semanales = horas_diarias * 7
+    nuevo_registro = f"🎮 {juego} ({plataforma}) - {horas_semanales} hrs/semana [{pais}]"
+    st.session_state.historial.append(nuevo_registro)
+    
+# Muestra de métricas destacadas
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(label="Juego Actual", value=juego)
+    with col2:
+        st.metric(label="Horas Semanales", value=f"{horas_semanales} hrs")
