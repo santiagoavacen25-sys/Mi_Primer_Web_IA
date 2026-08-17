@@ -28,3 +28,11 @@ if st.session_state.historial:
     st.subheader("📜 Historial de Juegos Guardados:")
     for item in st.session_state.historial:
         st.write(item)
+ 
+# 5. Boton de borrado
+
+if st.session_state.historial:
+    if st.button("🗑️ Limpiar historial"):
+        st.session_state.historial = []
+        st.rerun()
+        
