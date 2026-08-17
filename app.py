@@ -1,39 +1,30 @@
 import streamlit as st
 
-# Configuración básica de la página
 st.set_page_config(page_title="Calculadora Gamer", page_icon="🎮")
 
 st.title("🎮 Calculadora de Horas de Juego")
-st.write("Escribe tus datos para calcular cuántas horas juegas a la semana.")
 
-# 1. ENTRADAS DE DATOS (Variables)
+# 1. CREAR MEMORIA (Si no existe todavía)
+if "historial" not in st.session_state:
+    st.session_state.historial = []
+
+# 2. ENTRADAS DE DATOS
 juego = st.text_input("¿Qué juego estás jugando actualmente?")
-pais = st.text_input("De qué país eres")
+pais = st.text_input("¿De qué país eres?")
 plataforma = st.selectbox("Selecciona tu plataforma principal:", ["PC", "PlayStation 5", "Xbox", "Nintendo Switch"])
 horas_diarias = st.slider("¿Cuántas horas juegas al día aproximadamente?", min_value=1, max_value=12, value=2)
 
-# 2. BOTÓN DE ACCIÓN Y LÓGICA
-if st.button("Calcular estadísticas"):
-    # Cálculo matemático sencillo
+# 3. BOTÓN Y REGISTRO EN MEMORIA
+if st.button("Calcular y guardar estadísticas"):
     horas_semanales = horas_diarias * 7
     
-    st.divider()
-    st.subheader("📊 Tus Resultados:")
-    st.write(f"Juegas **{juego}** en **{plataforma}**.")
-    st.write(f"Un saludo para todos los jugadores de **{pais}** 🌎")
-    st.write(f"A la semana acumulas aproximadamente **{horas_semanales} horas** de juego.")
-    
-    # Condicionales para reaccionar a las horas
-    if horas_semanales <= 10:
-        st.info("🌱 Jugador casual: Buen equilibrio entre el juego y tus otras actividades.")
-    elif horas_semanales <= 25:
-        st.success("⚡ Jugador dedicado: ¡Le dedicas buen tiempo a subir de nivel!")
-    else:
-        st.warning("🔥 ¡Modo Tryhard!: Llevas bastantes horas en pantalla, recuerda hacer pausas para descansar los ojos.")
+    # Guardamos este registro en la lista dentro de la memoria
+    nuevo_registro = f"🎮 {juego} ({plataforma}) - {horas_semanales} hrs/semana [{pais}]"
+    st.session_state.historial.append(nuevo_registro)
 
-    # Reacción según la plataforma
-    if plataforma == "PC":
-        st.caption("💻 Configuración optimizada para máximo rendimiento.")
-    else:
-        st.caption("🎮 Modo cómodo desde la consola.")
-        
+# 4. MOSTRAR EL HISTORIAL GUARDADO
+if st.session_state.historial:
+    st.divider()
+    st.subheader("📜 Historial de Juegos Guardados:")
+    for item in st.session_state.historial:
+        st.write(item)
