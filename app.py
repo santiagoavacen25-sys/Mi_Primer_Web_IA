@@ -34,4 +34,3 @@ if st.button("Calcular estadísticas"):
         st.caption("💻 Configuración optimizada para máximo rendimiento.")
     else:
         st.caption("🎮 Modo cómodo desde la consola.")
-    
