@@ -38,7 +38,7 @@ if st.button("Calcular y guardar estadísticas"):
     nuevo_registro = f"🎮 {juego} ({plataforma}) - {horas_semanales} hrs/semana [{pais}]"
     st.session_state.historial.append(nuevo_registro)
     
-# Muestra de métricas destacadas
+    # Muestra de métricas destacadas
     col1, col2 = st.columns(2)
     with col1:
         st.metric(label="Juego Actual", value=juego)
