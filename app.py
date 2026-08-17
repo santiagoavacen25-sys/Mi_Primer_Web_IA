@@ -8,6 +8,7 @@ st.write("Escribe tus datos para calcular cuántas horas juegas a la semana.")
 
 # 1. ENTRADAS DE DATOS (Variables)
 juego = st.text_input("¿Qué juego estás jugando actualmente?")
+pais = st.text_input("De què paìs eres")
 plataforma = st.selectbox("Selecciona tu plataforma principal:", ["PC", "PlayStation 5", "Xbox", "Nintendo Switch"])
 horas_diarias = st.slider("¿Cuántas horas juegas al día aproximadamente?", min_value=1, max_value=12, value=2)
 
@@ -19,6 +20,7 @@ if st.button("Calcular estadísticas"):
     st.divider()
     st.subheader("📊 Tus Resultados:")
     st.write(f"Juegas **{juego}** en **{plataforma}**.")
+    st.write(f"Un saludo para todos los jugadores de **{pais}** 🌎")
     st.write(f"A la semana acumulas aproximadamente **{horas_semanales} horas** de juego.")
     
     # Condicionales para reaccionar a las horas
@@ -34,3 +36,4 @@ if st.button("Calcular estadísticas"):
         st.caption("💻 Configuración optimizada para máximo rendimiento.")
     else:
         st.caption("🎮 Modo cómodo desde la consola.")
+        
