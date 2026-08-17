@@ -8,7 +8,7 @@ st.write("Escribe tus datos para calcular cuántas horas juegas a la semana.")
 
 # 1. ENTRADAS DE DATOS (Variables)
 juego = st.text_input("¿Qué juego estás jugando actualmente?")
-pais = st.text_input("De què paìs eres")
+pais = st.text_input("De qué país eres")
 plataforma = st.selectbox("Selecciona tu plataforma principal:", ["PC", "PlayStation 5", "Xbox", "Nintendo Switch"])
 horas_diarias = st.slider("¿Cuántas horas juegas al día aproximadamente?", min_value=1, max_value=12, value=2)
 
