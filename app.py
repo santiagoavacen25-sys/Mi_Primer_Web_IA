@@ -1,39 +1,90 @@
 import streamlit as st
 import ollama
 
-st.set_page_config(page_title="Mi Agente Personal", page_icon="🕵️‍♂️")
-st.title("🕵️‍♂️ Asistente Agéntico Personal")
+# Configuración de la página
+st.set_page_config(page_title="Mi Perfil & Asistente IA", page_icon="⚡", layout="centered")
 
-# Instrucción de sistema (Define el rol y personalidad del Agente)
-SYSTEM_PROMPT = """
-Eres un Agente de IA Personal especializado en productividad y desarrollo en Python.
-Tus responsabilidades:
-1. Responder de forma estructurada, técnica y directa.
-2. Si el usuario te pide un código, entrégalo optimizado y limpio.
-3. Ayudar al usuario a planificar proyectos de software paso a paso.
+# --- CABECERA Y PERFIL ---
+st.markdown("<h1 style='text-align: center;'>⚡ ¡Hola, soy Santi!</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'>Programador en Python | Proyectos Web & Gaming</p>", unsafe_allow_html=True)
+
+st.divider()
+
+# --- ENLACES RÁPIDOS ---
+st.subheader("🌐 Mis Redes y Enlaces")
+col_a, col_b, col_c = st.columns(3)
+with col_a:
+    st.link_button("💻 GitHub", "https://github.com", use_container_width=True)
+with col_b:
+    st.link_button("🎮 Discord", "https://discord.com", use_container_width=True)
+with col_c:
+    st.link_button("🎥 YouTube", "https://youtube.com", use_container_width=True)
+
+st.divider()
+
+# --- ASISTENTE VIRTUAL IA ---
+st.subheader("🤖 Chatea con mi Asistente Virtual")
+st.write("Pregúntale a mi IA sobre mis proyectos, mi setup, mis juegos o pedirle ayuda en Python.")
+
+# Información base del asistente (System Prompt)
+CONTEXTO_ASISTENTE = """
+Eres el asistente virtual personal de Santi en su página web.
+Responde de forma amable, clara y breve en español.
+Aquí tienes los datos principales sobre Santi:
+- Tiene 19 años.
+- Le apasiona la programación con Python, el desarrollo de aplicaciones web y proyectos de IA.
+- Sus proyectos principales incluyen una Calculadora Gamer y un Organizador de Metas y Tareas hecho en Streamlit.
+- Juega títulos como Fortnite, Rocket League y Minecraft en PC y consola.
+- Su equipo de desarrollo cuenta con almacenamiento SSD y tarjeta gráfica NVIDIA.
+Si te preguntan sobre dudas de código en Python, responde con ejemplos sencillos y explicaciones claras.
 """
 
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+# Inicializar historial de chat en la memoria de la sesión
+if "historial_chat" not in st.session_state:
+    st.session_state.historial_chat = []
 
-# Mostrar chat omitiendo el mensaje interno de sistema
-for msg in st.session_state.messages:
-    if msg["role"] != "system":
-        with st.chat_message(msg["role"]):
-            st.write(msg["content"])
+# Mostrar el historial de conversación en pantalla
+for mensaje in st.session_state.historial_chat:
+    with st.chat_message(mensaje["role"]):
+        st.markdown(mensaje["content"])
 
-if prompt := st.chat_input("Pídele algo a tu Agente (ej: 'Planifica mi app en 3 pasos')..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# Entrada de texto para el usuario
+if preg := st.chat_input("Escribe una pregunta para el asistente..."):
+    # Guardar y mostrar el mensaje del usuario
+    st.session_state.historial_chat.append({"role": "user", "content": preg})
     with st.chat_message("user"):
-        st.write(prompt)
+        st.markdown(preg)
 
+    # Generar la respuesta usando Ollama local
     with st.chat_message("assistant"):
-        with st.spinner("El Agente está procesando la tarea..."):
-            response = ollama.chat(
-                model="qwen2.5-coder:1.5b",
-                messages=st.session_state.messages
-            )
-            answer = response["message"]["content"]
-            st.write(answer)
+        with st.spinner("Pensando respuesta..."):
+            try:
+                # Estructuramos los mensajes incluyendo el contexto del perfil
+                mensajes_para_ollama = [{"role": "system", "content": CONTEXTO_ASISTENTE}]
+                for m in st.session_state.historial_chat:
+                    mensajes_para_ollama.append({"role": m["role"], "content": m["content"]})
+                
+                respuesta_ollama = ollama.chat(
+                    model='qwen2.5-coder',
+                    messages=mensajes_para_ollama
+                )
+                
+                texto_respuesta = respuesta_ollama['message']['content']
+                st.markdown(texto_respuesta)
+                
+                # Guardar respuesta de la IA en la sesión
+                st.session_state.historial_chat.append({"role": "assistant", "content": texto_respuesta})
+                
+            except Exception as e:
+                st.error("No se pudo conectar con Ollama. Verifica que la app de Ollama esté abierta en tu Mac.")
 
-    st.session_state.messages.append({"role": "assistant", "content": answer})
+st.divider()
+
+# --- SETUP Y DETALLES DEL EQUIPO ---
+with st.expander("💻 Ver detalles del Setup"):
+    st.write("- **Procesador:** Intel / Apple Silicon")
+    st.write("- **Gráfica:** NVIDIA GTX 1050 Ti / MX450")
+    st.write("- **Almacenamiento:** 1 TB SSD")
+    st.write("- **Herramientas de desarrollo:** VS Code, Python, Streamlit, Ollama, Git & GitHub Desktop")
+
+st.markdown("<br><p style='text-align: center; font-size: 12px; color: gray;'>Sitio impulsado localmente con Python & Ollama 🐍</p>", unsafe_allow_html=True)
