@@ -1,50 +1,39 @@
 import streamlit as st
 
-st.set_page_config(page_title="Calculadora Gamer", page_icon="🎮")
+st.set_page_config(page_title="Mi Organizador Gamer", page_icon="🎯")
 
-st.title("🎮 Calculadora de Horas de Juego")
+st.title("🎯 Mi Panel de Metas y Tareas")
+st.write("Organiza tus pendientes de juego, proyectos de código y tareas diarias.")
 
-# 1. MEMORIA DEL SISTEMA
-if "historial" not in st.session_state:
-    st.session_state.historial = []
-if "horas_lista" not in st.session_state:
-    st.session_state.horas_lista = []
+# 1. INICIALIZAR MEMORIA (LISTA DE TAREAS)
+if "tareas" not in st.session_state:
+    st.session_state.tareas = []
 
-# 2. BARRA LATERAL
-st.sidebar.header("⚙️ Configuración")
-juego = st.sidebar.text_input("¿Qué juego estás jugando actualmente?")
-pais = st.sidebar.text_input("¿De qué país eres?")
-plataforma = st.sidebar.selectbox("Plataforma principal:", ["PC", "PlayStation 5", "Xbox", "Nintendo Switch"])
-horas_diarias = st.sidebar.slider("Horas jugadas al día:", min_value=1, max_value=12, value=2)
+# 2. BARRA LATERAL PARA AGREGAR TAREAS
+st.sidebar.header("➕ Agregar Nueva Tarea")
+nueva_tarea = st.sidebar.text_input("Escribe tu pendiente o meta:")
+categoria = st.sidebar.selectbox("Categoría:", ["🎮 Juegos", "💻 Programación", "📚 Personal"])
 
-# 3. BOTÓN PRINCIPAL Y MÉTRICAS
-if st.button("Calcular y guardar estadísticas"):
-    horas_semanales = horas_diarias * 7
-    
-    # Guardar en las dos listas de memoria
-    nuevo_registro = f"🎮 {juego} ({plataforma}) - {horas_semanales} hrs/semana [{pais}]"
-    st.session_state.historial.append(nuevo_registro)
-    st.session_state.horas_lista.append(horas_semanales)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(label="Juego Actual", value=juego if juego else "Sin nombre")
-    with col2:
-        st.metric(label="Horas Semanales", value=f"{horas_semanales} hrs")
-
-# 4. GRÁFICO DE BARRAS E HISTORIAL
-if st.session_state.historial:
-    st.divider()
-    
-    # Muestra del gráfico interactivo
-    st.subheader("📊 Gráfico de Horas Semanales Por Registro:")
-    st.bar_chart(st.session_state.horas_lista)
-    
-    st.subheader("📜 Historial de Juegos Guardados:")
-    for item in st.session_state.historial:
-        st.write(item)
-        
-    if st.button("🗑️ Limpiar historial"):
-        st.session_state.historial = []
-        st.session_state.horas_lista = []
+if st.sidebar.button("Guardar Tarea"):
+    if nueva_tarea.strip() != "":
+        # Guardamos la tarea como un diccionario (texto, categoría y estado)
+        item = {"texto": nueva_tarea, "categoria": categoria, "completada": False}
+        st.session_state.tareas.append(item)
+        st.sidebar.success("¡Tarea agregada!")
         st.rerun()
+
+# 3. MOSTRAR TAREAS EN LA PANTALLA PRINCIPAL
+if st.session_state.tareas:
+    st.subheader("📋 Tu Lista de Pendientes:")
+    
+    for idx, tarea in enumerate(st.session_state.tareas):
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.write(f"**[{tarea['categoria']}]** {tarea['texto']}")
+        with col2:
+            if st.button("❌", key=f"del_{idx}"):
+                st.session_state.tareas.pop(idx)
+                st.rerun()
+else:
+    st.info("Aún no tienes tareas guardadas. Agrega una desde la barra lateral. 👈")
+    st.info("Aún no tienes tareas guardadas. Agrega una desde la barra lateral. 👈")
