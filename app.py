@@ -1,65 +1,43 @@
 import streamlit as st
 
-st.set_page_config(page_title="Mi Organizador Gamer", page_icon="🎯")
+# Configuración de la página
+st.set_page_config(page_title="Mi Perfil | Developer & Gamer", page_icon="⚡", layout="centered")
 
-st.title("🎯 Mi Panel de Metas y Tareas")
-st.write("Organiza tus pendientes de juego, proyectos de código y tareas diarias.")
+# --- CABECERA / PERFIL ---
+st.markdown("<h1 style='text-align: center;'>⚡ ¡Hola, soy Santi!</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'>Aprendiéndo a programar en Python | Gamer & Creador de Proyectos Web</p>", unsafe_allow_html=True)
 
-# 1. INICIALIZAR MEMORIA
-if "tareas" not in st.session_state:
-    st.session_state.tareas = []
+st.divider()
 
-# 2. BARRA LATERAL PARA AGREGAR TAREAS Y FILTRAR
-st.sidebar.header("➕ Agregar Nueva Tarea")
-nueva_tarea = st.sidebar.text_input("Escribe tu pendiente o meta:")
-categoria = st.sidebar.selectbox("Categoría:", ["🎮 Juegos", "💻 Programación", "📚 Personal"])
+# --- SECCIÓN DE PROYECTOS / SOBRE MÍ ---
+st.subheader("🚀 Mis Proyectos")
 
-if st.sidebar.button("Guardar Tarea"):
-    if nueva_tarea.strip() != "":
-        item = {"texto": nueva_tarea, "categoria": categoria, "completada": False}
-        st.session_state.tareas.append(item)
-        st.sidebar.success("¡Tarea agregada!")
-        st.rerun()
+col1, col2 = st.columns(2)
 
-st.sidebar.divider()
-st.sidebar.header("🔍 Filtro")
-filtro_cat = st.sidebar.radio("Ver categoría:", ["Todas", "🎮 Juegos", "💻 Programación", "📚 Personal"])
+with col1:
+    st.info("**🎯 Organizador de Metas**\n\nApp web interactiva para gestionar pendientes diarias, filtrar categorías y ver progreso en tiempo real.")
 
-# 3. BARRA DE PROGRESO Y MOSTRAR TAREAS
-if st.session_state.tareas:
-    total_tareas = len(st.session_state.tareas)
-    completadas = sum(1 for t in st.session_state.tareas if t["completada"])
-    porcentaje = completadas / total_tareas if total_tareas > 0 else 0.0
-    
-    st.write(f"**Progreso general:** {completadas} de {total_tareas} tareas completadas")
-    st.progress(porcentaje)
-    
-    # Mensaje especial si logras el 100%
-    if completadas == total_tareas and total_tareas > 0:
-        st.balloons()
-        st.success("🎉 ¡Felicidades! Has completado todas tus metas acumuladas.")
-    
-    st.divider()
-    st.subheader("📋 Tu Lista de Pendientes:")
-    
-    for idx, tarea in enumerate(st.session_state.tareas):
-        # Aplicamos el filtro de categoría seleccionada
-        if filtro_cat == "Todas" or tarea["categoria"] == filtro_cat:
-            col1, col2 = st.columns([4, 1])
-            with col1:
-                estado = st.checkbox(
-                    f"**[{tarea['categoria']}]** {tarea['texto']}", 
-                    value=tarea["completada"], 
-                    key=f"check_{idx}"
-                )
-                if estado != tarea["completada"]:
-                    st.session_state.tareas[idx]["completada"] = estado
-                    st.rerun()
-                
-            with col2:
-                if st.button("❌", key=f"del_{idx}"):
-                    st.session_state.tareas.pop(idx)
-                    st.rerun()
-else:
-    st.info("Aún no tienes tareas guardadas. Agrega una desde la barra lateral. 👈")
+with col2:
+    st.success("**🎮 Calculadora Gamer**\n\nHerramienta con métricas visuales y estadísticas para analizar horas de juego y rendimiento.")
+
+st.divider()
+
+# --- SECCIÓN DE ENLACES (LINKTREE) ---
+st.subheader("🌐 Mis Redes y Enlaces")
+
+# Botones que dirigen a tus perfiles
+st.link_button("💻 Mi Perfil de GitHub", "https://github.com", use_container_width=True)
+st.link_button("🎮 Miembros de mi Comunidad en Discord", "https://discord.com", use_container_width=True)
+st.link_button("🎥 Canal / Stream", "https://youtube.com", use_container_width=True)
+
+st.divider()
+
+# --- SECCIÓN EXTRA: SETUP / HARDWARE ---
+with st.expander("💻 Ver mi Setup de Programación y Gaming"):
+    st.write("- **Procesador:** Intel / Apple Silicon")
+    st.write("- **Gráfica:** NVIDIA GTX 1050 Ti / MX450")
+    st.write("- **Almacenamiento:** 1 TB SSD")
+    st.write("- **Software:** VS Code, Python, Streamlit, Git & GitHub Desktop")
+
+st.markdown("<br><p style='text-align: center; font-size: 12px; color: gray;'>Construido desde cero con Python & Streamlit 🐍</p>", unsafe_allow_html=True)
     
