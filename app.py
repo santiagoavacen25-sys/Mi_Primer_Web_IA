@@ -1,63 +1,39 @@
 import streamlit as st
-import pickle
+import ollama
 
-# Título de la aplicación
-st.title("Lista de Tareas (To-Do List)")
+st.set_page_config(page_title="Mi Agente Personal", page_icon="🕵️‍♂️")
+st.title("🕵️‍♂️ Asistente Agéntico Personal")
 
-# Cargar la lista de tareas desde un archivo si existe
-try:
-    with open('tasks.pkl', 'rb') as f:
-        tasks = pickle.load(f)
-except FileNotFoundError:
-    tasks = []
+# Instrucción de sistema (Define el rol y personalidad del Agente)
+SYSTEM_PROMPT = """
+Eres un Agente de IA Personal especializado en productividad y desarrollo en Python.
+Tus responsabilidades:
+1. Responder de forma estructurada, técnica y directa.
+2. Si el usuario te pide un código, entrégalo optimizado y limpio.
+3. Ayudar al usuario a planificar proyectos de software paso a paso.
+"""
 
-# Función para agregar una tarea
-def add_task(text, priority):
-    tasks.append({'text': text, 'priority': priority, 'completed': False})
-    with open('tasks.pkl', 'wb') as f:
-        pickle.dump(tasks, f)
+if "messages" not in st.session_state:
+    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-# Función para marcar una tarea como completada
-def mark_task(index):
-    tasks[index]['completed'] = True
-    with open('tasks.pkl', 'wb') as f:
-        pickle.dump(tasks, f)
+# Mostrar chat omitiendo el mensaje interno de sistema
+for msg in st.session_state.messages:
+    if msg["role"] != "system":
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
 
-# Función para eliminar una tarea
-def delete_task(index):
-    del tasks[index]
-    with open('tasks.pkl', 'wb') as f:
-        pickle.dump(tasks, f)
+if prompt := st.chat_input("Pídele algo a tu Agente (ej: 'Planifica mi app en 3 pasos')..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.write(prompt)
 
-# Formulario para agregar una nueva tarea
-with st.form(key='task_form'):
-    task_text = st.text_input('Nueva tarea:')
-    priority = st.selectbox('Prioridad', ['Alta', 'Media', 'Baja'])
-    if st.form_submit_button('Agregar Tarea'):
-        add_task(task_text, priority)
+    with st.chat_message("assistant"):
+        with st.spinner("El Agente está procesando la tarea..."):
+            response = ollama.chat(
+                model="qwen2.5-coder:1.5b",
+                messages=st.session_state.messages
+            )
+            answer = response["message"]["content"]
+            st.write(answer)
 
-# Mostrar las tareas en la pantalla
-if tasks:
-    st.write('### Tareas Pendientes:')
-    for i, task in enumerate(tasks):
-        if not task['completed']:
-            with st.container():
-                st.write(f"{i + 1}. **{task['text']}** - {task['priority']}")
-                col1, col2, col3 = st.columns([2, 1, 1])
-                with col1:
-                    if st.button('Marcar como Completada', key=f"mark_{i}"):
-                        mark_task(i)
-                with col2:
-                    if st.button('Eliminar', key=f"delete_{i}"):
-                        delete_task(i)
-else:
-    st.write('No hay tareas pendientes.')
-
-# Mostrar las tareas completadas
-if any(task['completed'] for task in tasks):
-    st.write('### Tareas Completadas:')
-    for i, task in enumerate(tasks):
-        if task['completed']:
-            st.write(f"{i + 1}. **{task['text']}** - {task['priority']}")
-else:
-    st.write('No hay tareas completadas.')
+    st.session_state.messages.append({"role": "assistant", "content": answer})
