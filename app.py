@@ -263,25 +263,33 @@ st.write("")
 # =========================================================
 
 with st.sidebar:
-
     st.title("⚙️ Configuración")
-
     st.divider()
 
+    # 1. BOTÓN PARA BORRAR / NUEVO CHAT
     if st.button("➕ Nuevo chat"):
-
         st.session_state.messages = []
-
         st.rerun()
 
-    if "chats" not in st.session_state:
-      mensajes = {"Nuevo char con SantiIA"}
+    # 2. BOTÓN PARA GUARDAR
+    if st.button("💾 Guardar chat"):
+        if len(st.session_state.messages) > 0:
+            num = len(st.session_state.chats) + 1
+            st.session_state.chats[f"Chat {num}"] = st.session_state.messages.copy()
+            st.success(f"Guardado como Chat {num}")
+        else:
+            st.warning("No hay nada que guardar.")
 
-st.caption("Santi AI ⚡")
+    st.divider()
+    st.subheader("Mis Chats Guardados")
 
-st.caption(
-        "Desarrollado con Python + Streamlit + Groq"
-    )
+    # 3. BUCLE FOR PARA MOSTRAR LOS CHATS
+    for nombre_chat in st.session_state.chats:
+        if st.button(f"💬 {nombre_chat}"):
+            st.session_state.messages = st.session_state.chats[nombre_chat]
+            st.rerun()
+
+    st.caption("Santi AI ⚡")
 
 
 # =========================================================
