@@ -276,7 +276,7 @@ with st.sidebar:
 
     st.divider()
 
-    st.caption("Santi IA")
+    st.caption("Santi AI ⚡")
 
     st.caption(
         "Desarrollado con Python + Streamlit + Groq"
