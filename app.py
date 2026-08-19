@@ -297,9 +297,10 @@ with st.sidebar:
 
   # 2. Botón para ELIMINAR solo este chat
     
+         
     if st.button(f"🗑️ Borrar {nombre_chat}"):
-     del st.session_state.chats[nombre_chat]        
-    st.rerun
+          del st.session_state.chats[nombre_chat]        
+          st.rerun
         
     
 
