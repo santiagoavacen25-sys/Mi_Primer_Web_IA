@@ -286,7 +286,7 @@ with st.sidebar:
     # 3. BOTON PARA ELIMINAR LOS CHATS 🗑️
     
     if st.button("Eliminar el chat 🗑️"):
-        st.session_state.chats = {}
+        st.session_state.chat = {}
 
     st.divider()
     st.subheader("Mis Chats Guardados")
