@@ -7,7 +7,7 @@ from groq import Groq
 
 st.set_page_config(
     page_title="Santi AI ⚡",
-    page_icon="Santi AI ⚡",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -274,11 +274,12 @@ with st.sidebar:
 
         st.rerun()
 
-    st.divider()
+if "chats" not in st.session_state:
+   diccionario = {"Nuevo char con SantiIA"}
 
-    st.caption("Santi AI ⚡")
+st.caption("Santi AI ⚡")
 
-    st.caption(
+st.caption(
         "Desarrollado con Python + Streamlit + Groq"
     )
 
