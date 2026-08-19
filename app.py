@@ -59,12 +59,13 @@ if preg := st.chat_input("Escribe una pregunta para el asistente..."):
     with st.chat_message("assistant"):
         with st.spinner("Pensando respuesta..."):
             try:
+                              
                 mensajes_para_ollama = [{"role": "system", "content": CONTEXTO_ASISTENTE}]
                 for m in st.session_state.historial_chat:
                     mensajes_para_ollama.append({"role": m["role"], "content": m["content"]})
                 
                 respuesta_ollama = ollama.chat(
-                    model='qwen2.5-coder',
+                    model='qwen2.5:1.5b',
                     messages=mensajes_para_ollama
                 )
                 
