@@ -6,7 +6,7 @@ from groq import Groq
 # =========================================================
 
 st.set_page_config(
-    page_title="Santi AI",
+    page_title="Santi AI ⚡",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
