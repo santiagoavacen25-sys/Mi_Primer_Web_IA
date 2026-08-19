@@ -159,7 +159,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 if "model" not in st.session_state:
-    st.session_state.model = "llama-3.1-70b-versatile"
+    st.session_state.model = "mixtral-8x7b-32768"
     
 # =========================================================
 # HEADER
@@ -245,9 +245,9 @@ with st.sidebar:
     modelo = st.selectbox(
     "Modelo de IA",
     [
-        "llama-3.1-70b-versatile",
-        "llama-3.1-8b-instant",
-        "mixtral-8x7b-32768"
+        "mixtral-8x7b-32768",
+        "qwen/qwen3-32b",
+        "openai/gpt-oss-120b"
     ]
 )
 
