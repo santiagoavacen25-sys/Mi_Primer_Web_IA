@@ -591,7 +591,7 @@ No encontré `GROQ_API_KEY`.
 
 Si estás usando Streamlit Cloud:
 
-1. Ve a tu aplicación.
+1. Ve a **Manage app**.
 2. Abre **Settings**.
 3. Entra en **Secrets**.
 4. Agrega:
