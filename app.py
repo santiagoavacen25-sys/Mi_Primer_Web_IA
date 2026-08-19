@@ -268,7 +268,7 @@ with st.sidebar:
 
     st.divider()
 
-    if st.button("🗑️ Borrar conversación"):
+    if st.button("➕ Nuevo chat"):
 
         st.session_state.messages = []
 
