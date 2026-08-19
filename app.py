@@ -8,7 +8,7 @@ st.write("Programador en Python | Proyectos Web & Gaming")
 
 # Conexión con Groq usando la clave guardada en Secrets
 client = Groq(
-    api_key="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"
+    api_key=st.secrets["GROQ_API_KEY"]
 )
 
 CONTEXTO_ASISTENTE = "Eres el asistente virtual personal de Santi. Responde brevemente en español."
