@@ -192,7 +192,7 @@ if "model" not in st.session_state:
 st.markdown("""
 <div class="hero">
 <div class="logo">⚡</div>
-<h1>Santi AI</h1>
+<h1>Santi IA</h1>
 <p>Tu asistente de inteligencia artificial para aprender, programar, crear y resolver problemas.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -288,7 +288,7 @@ with st.sidebar:
 
     st.divider()
 
-    st.caption("Santi AI")
+    st.caption("Santi IA")
 
     st.caption(
         "Desarrollado con Python + Streamlit + Groq"
@@ -375,7 +375,7 @@ for message in st.session_state.messages:
 # =========================================================
 
 pregunta = st.chat_input(
-    "Escribe tu pregunta para Santi AI..."
+    "Escribe tu pregunta para Santi IA..."
 )
 
 
@@ -496,6 +496,6 @@ innecesariamente largas.
 
 st.markdown("""
 <div class="footer">
-Santi AI ⚡ · Python + Streamlit + Groq
+Santi IA ⚡ · Python + Streamlit + Groq
 </div>
 """, unsafe_allow_html=True)
