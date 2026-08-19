@@ -266,7 +266,7 @@ with st.sidebar:
 
     st.title("⚙️ Configuración")
 
-    modelo = st.selectbox.__annotations__(
+    modelo = st.selectbox(
         "Modelo de IA",
         [
             "openai/gpt-oss-120b",
@@ -276,7 +276,7 @@ with st.sidebar:
         ]
     )
 
-    st.__annotations__.model = modelo
+    st.session_state.model
 
     st.divider()
 
