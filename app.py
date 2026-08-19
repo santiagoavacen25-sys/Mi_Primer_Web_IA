@@ -7,7 +7,9 @@ st.title("⚡ ¡Hola, soy Santi!")
 st.write("Programador en Python | Proyectos Web & Gaming")
 
 # Conexión con Groq usando la clave guardada en Secrets
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+client = Groq(
+    api_key="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"
+)
 
 CONTEXTO_ASISTENTE = "Eres el asistente virtual personal de Santi. Responde brevemente en español."
 
@@ -43,4 +45,4 @@ if preg := st.chat_input("Escribe una pregunta para el asistente..."):
                 st.session_state.historial_chat.append({"role": "assistant", "content": texto_respuesta})
                 
             except Exception as e:
-                st.error("Hubo un error al conectar con la IA. Asegúrate de configurar la clave GROQ_API_KEY.")
+                st.error("Hubo un error al conectar con la IA. Asegúrate de configurar la clave GROQ_API_KEY.") 
