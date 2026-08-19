@@ -401,12 +401,11 @@ Sé directo y evita respuestas innecesariamente largas.
 
             st.code(str(e))
 
-## =========================================================
+# =========================================================
 # HEADER
 # =========================================================
 
-
-    st.markdown("""
+st.markdown("""
 <div class="hero">
     <div class="logo">⚡</div>
     <h1>Santi AI</h1>
