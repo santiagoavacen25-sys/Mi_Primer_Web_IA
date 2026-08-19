@@ -183,6 +183,9 @@ if "messages" not in st.session_state:
 
 if "model" not in st.session_state:
     st.session_state.model = "openai/gpt-oss-120b"
+    
+if "chats" not in st.session_state:
+    st.session_state.chats = {} 
 
 
 # =========================================================
