@@ -27,27 +27,12 @@ html, body, [class*="css"] {
 
 .stApp {
     background:
-        radial-gradient(
-            circle at 15% 10%,
-            rgba(120, 80, 255, 0.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 20%,
-            rgba(0, 180, 255, 0.12),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #070912 0%,
-            #0b1020 50%,
-            #070912 100%
-        );
-
+        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
+        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
     color: white;
 }
 
-/* Quitar espacio superior */
 .block-container {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -67,30 +52,21 @@ html, body, [class*="css"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     width: 70px;
     height: 70px;
-
     border-radius: 22px;
-
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
-
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-
     font-size: 34px;
-
-    box-shadow:
-        0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 
 .hero h1 {
     font-size: 42px;
     margin: 18px 0 8px 0;
-
     font-weight: 800;
-
     letter-spacing: -1.5px;
 }
 
@@ -105,18 +81,12 @@ html, body, [class*="css"] {
 
 .glass {
     background: rgba(255,255,255,0.055);
-
     border: 1px solid rgba(255,255,255,0.10);
-
     border-radius: 22px;
-
     padding: 22px;
-
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-
-    box-shadow:
-        0 15px 50px rgba(0,0,0,0.18);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.18);
 }
 
 /* =========================================================
@@ -124,30 +94,19 @@ html, body, [class*="css"] {
    ========================================================= */
 
 .stButton > button {
-
     width: 100%;
-
     border-radius: 14px;
-
     border: 1px solid rgba(255,255,255,0.12);
-
     background: rgba(255,255,255,0.07);
-
     color: white;
-
     font-weight: 600;
-
     padding: 10px 16px;
-
     transition: 0.2s;
 }
 
 .stButton > button:hover {
-
     background: rgba(255,255,255,0.13);
-
     border-color: rgba(255,255,255,0.25);
-
     transform: translateY(-1px);
 }
 
@@ -156,13 +115,9 @@ html, body, [class*="css"] {
    ========================================================= */
 
 [data-testid="stChatMessage"] {
-
     background: rgba(255,255,255,0.045);
-
     border: 1px solid rgba(255,255,255,0.07);
-
     border-radius: 18px;
-
     margin-bottom: 10px;
 }
 
@@ -171,7 +126,6 @@ html, body, [class*="css"] {
    ========================================================= */
 
 [data-testid="stChatInput"] {
-
     border-radius: 18px;
 }
 
@@ -180,11 +134,8 @@ html, body, [class*="css"] {
    ========================================================= */
 
 div[data-baseweb="select"] > div {
-
     background: rgba(255,255,255,0.06);
-
     border: 1px solid rgba(255,255,255,0.12);
-
     border-radius: 14px;
 }
 
@@ -193,20 +144,14 @@ div[data-baseweb="select"] > div {
    ========================================================= */
 
 .footer {
-
     text-align: center;
-
     color: #737b91;
-
     font-size: 13px;
-
     padding: 30px 0 10px 0;
 }
 
 .small {
-
     color: #8e96aa;
-
     font-size: 13px;
 }
 
@@ -219,7 +164,6 @@ div[data-baseweb="select"] > div {
 # =========================================================
 
 try:
-
     api_key = st.secrets["GROQ_API_KEY"]
 
     client = Groq(
@@ -227,7 +171,6 @@ try:
     )
 
 except Exception:
-
     client = None
 
 
@@ -236,12 +179,9 @@ except Exception:
 # =========================================================
 
 if "messages" not in st.session_state:
-
     st.session_state.messages = []
 
-
 if "model" not in st.session_state:
-
     st.session_state.model = "openai/gpt-oss-120b"
 
 
@@ -251,16 +191,9 @@ if "model" not in st.session_state:
 
 st.markdown("""
 <div class="hero">
-
-    <div class="logo">⚡</div>
-
-    <h1>Santi AI</h1>
-
-    <p>
-        Tu asistente de inteligencia artificial para aprender,
-        programar, crear y resolver problemas.
-    </p>
-
+<div class="logo">⚡</div>
+<h1>Santi AI</h1>
+<p>Tu asistente de inteligencia artificial para aprender, programar, crear y resolver problemas.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -292,64 +225,34 @@ col1, col2, col3 = st.columns(3)
 with col1:
 
     st.markdown("""
-    <div class="glass">
-
-        <div style="font-size:28px;">
-            🤖
-        </div>
-
-        <h3>
-            Chat con IA
-        </h3>
-
-        <div class="small">
-            Pregunta lo que quieras y recibe respuestas.
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
+<div class="glass">
+<div style="font-size:28px;">🤖</div>
+<h3>Chat con IA</h3>
+<div class="small">Pregunta lo que quieras y recibe respuestas.</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 with col2:
 
     st.markdown("""
-    <div class="glass">
-
-        <div style="font-size:28px;">
-            💻
-        </div>
-
-        <h3>
-            Programación
-        </h3>
-
-        <div class="small">
-            Aprende Python, web, APIs y mucho más.
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
+<div class="glass">
+<div style="font-size:28px;">💻</div>
+<h3>Programación</h3>
+<div class="small">Aprende Python, web, APIs y mucho más.</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 with col3:
 
     st.markdown("""
-    <div class="glass">
-
-        <div style="font-size:28px;">
-            📚
-        </div>
-
-        <h3>
-            Aprendizaje
-        </h3>
-
-        <div class="small">
-            Explicaciones sencillas paso a paso.
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
+<div class="glass">
+<div style="font-size:28px;">📚</div>
+<h3>Aprendizaje</h3>
+<div class="small">Explicaciones sencillas paso a paso.</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 st.write("")
@@ -365,7 +268,6 @@ with st.sidebar:
 
     modelo = st.selectbox(
         "Modelo de IA",
-
         [
             "openai/gpt-oss-120b",
             "openai/gpt-oss-20b",
@@ -400,23 +302,16 @@ with st.sidebar:
 if len(st.session_state.messages) == 0:
 
     st.markdown("""
-    <div class="glass">
-
-        <h3>
-            👋 ¿Qué quieres hacer?
-        </h3>
-
-        <p class="small">
-
-            Puedes preguntarme sobre programación,
-            videojuegos, tecnología, tareas,
-            matemáticas, ideas para proyectos
-            o prácticamente cualquier tema.
-
-        </p>
-
-    </div>
-    """, unsafe_allow_html=True)
+<div class="glass">
+<h3>👋 ¿Qué quieres hacer?</h3>
+<p class="small">
+Puedes preguntarme sobre programación,
+videojuegos, tecnología, tareas,
+matemáticas, ideas para proyectos
+o prácticamente cualquier tema.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
     st.write("")
 
@@ -428,12 +323,8 @@ if len(st.session_state.messages) == 0:
         if st.button("🐍 Enséñame Python"):
 
             st.session_state.messages.append({
-
                 "role": "user",
-
-                "content":
-                "Enséñame Python desde cero con un ejercicio sencillo."
-
+                "content": "Enséñame Python desde cero con un ejercicio sencillo."
             })
 
             st.rerun()
@@ -444,12 +335,8 @@ if len(st.session_state.messages) == 0:
         if st.button("💻 Dame un proyecto"):
 
             st.session_state.messages.append({
-
                 "role": "user",
-
-                "content":
-                "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
-
+                "content": "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
             })
 
             st.rerun()
@@ -460,33 +347,22 @@ if len(st.session_state.messages) == 0:
         if st.button("🚀 Explícame IA"):
 
             st.session_state.messages.append({
-
                 "role": "user",
-
-                "content":
-                "Explícame qué es la inteligencia artificial de forma sencilla."
-
+                "content": "Explícame qué es la inteligencia artificial de forma sencilla."
             })
 
             st.rerun()
 
 
 # =========================================================
-# HISTORIAL DE CHAT
+# HISTORIAL
 # =========================================================
 
 for message in st.session_state.messages:
 
     with st.chat_message(
-
         message["role"],
-
-        avatar=(
-            "🧑"
-            if message["role"] == "user"
-            else "⚡"
-        )
-
+        avatar="🧑" if message["role"] == "user" else "⚡"
     ):
 
         st.markdown(
@@ -506,17 +382,13 @@ pregunta = st.chat_input(
 if pregunta:
 
     # =====================================================
-    # GUARDAR MENSAJE DEL USUARIO
+    # MENSAJE DEL USUARIO
     # =====================================================
 
     st.session_state.messages.append({
-
         "role": "user",
-
         "content": pregunta
-
     })
-
 
     with st.chat_message(
         "user",
@@ -537,19 +409,12 @@ if pregunta:
 
         try:
 
-            with st.spinner(
-                "Pensando..."
-            ):
+            with st.spinner("Pensando..."):
 
-                respuesta = client.chat.completions.create(
-
-                    model=st.session_state.model,
-
-                    messages=[
-                        {
-                            "role": "system",
-
-                            "content": """
+                mensajes = [
+                    {
+                        "role": "system",
+                        "content": """
 Eres Santi AI, un asistente amigable,
 claro y útil.
 
@@ -582,21 +447,23 @@ dilo claramente.
 Sé directo y evita respuestas
 innecesariamente largas.
 """
-                        }
-                    ] + st.session_state.messages,
+                    }
+                ]
 
+                mensajes.extend(
+                    st.session_state.messages
+                )
+
+
+                respuesta = client.chat.completions.create(
+                    model=st.session_state.model,
+                    messages=mensajes,
                     temperature=0.7,
-
                     max_tokens=2048
                 )
 
 
-                texto = (
-                    respuesta
-                    .choices[0]
-                    .message
-                    .content
-                )
+                texto = respuesta.choices[0].message.content
 
 
                 st.markdown(texto)
@@ -607,11 +474,8 @@ innecesariamente largas.
                 # =========================================
 
                 st.session_state.messages.append({
-
                     "role": "assistant",
-
                     "content": texto
-
                 })
 
 
@@ -632,8 +496,6 @@ innecesariamente largas.
 
 st.markdown("""
 <div class="footer">
-
-    Santi AI ⚡ · Python + Streamlit + Groq
-
+Santi AI ⚡ · Python + Streamlit + Groq
 </div>
 """, unsafe_allow_html=True)
