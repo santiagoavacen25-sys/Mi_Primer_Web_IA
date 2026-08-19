@@ -293,16 +293,13 @@ with st.sidebar:
          st.session_state.messages = st.session_state.chats[nombre_chat]
          st.rerun() 
           
-    st.caption("Santi AI ⚡")
-
   # 2. Botón para ELIMINAR solo este chat
-    
-         
-    if st.button(f"🗑️ Borrar {nombre_chat}"):
-          del st.session_state.chats[nombre_chat]        
-          st.rerun
+             
+        if st.button(f"🗑️ Borrar {nombre_chat}"):
+            del st.session_state.chats[nombre_chat]        
+            st.rerun
         
-    
+        st.caption("Santi AI ⚡")
 
 # =========================================================
 # SUGERENCIAS
