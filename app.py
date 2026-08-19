@@ -30,15 +30,15 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
     with st.chat_message("assistant"):
         try:
             mensajes_for_api = [{"role": "system", "content": CONTEXTO_ASISTENTE}] + st.session_state.historial_chat
-            
+
             completion = client.chat.completions.create(
-              model="llama3-8b-8192",  # <--- MODELO OFICIAL DE GROQ
+                model="llama-3.1-8b-instant",
                 messages=mensajes_for_api
             )
-            
+
             respuesta = completion.choices[0].message.content
             st.markdown(respuesta)
             st.session_state.historial_chat.append({"role": "assistant", "content": respuesta})
-            
+
         except Exception as e:
-            st.error(f"Error detallado: {e}")  # <--- ESTO NOS MOSTRARÁ EL ERROR REAL SI FALLA
+            st.error(f"Error detallado: {e}")
