@@ -400,14 +400,18 @@ Sé directo y evita respuestas innecesariamente largas.
 
             st.code(str(e))
 
-# =========================================================
-# FOOTER
+## =========================================================
+# HEADER
 # =========================================================
 
-st.markdown("""
-<div class="footer">
-    ⚡ Santi AI · Python · Streamlit · Groq
-    <br>
-    Una IA creada para aprender y crear.
+
+    st.markdown("""
+<div class="hero">
+    <div class="logo">⚡</div>
+    <h1>Santi AI</h1>
+    <p>
+        Tu asistente de inteligencia artificial para aprender,
+        programar, crear y resolver problemas.
+    </p>
 </div>
 """, unsafe_allow_html=True)
