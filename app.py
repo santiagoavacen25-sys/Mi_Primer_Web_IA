@@ -282,6 +282,11 @@ with st.sidebar:
             st.success(f"Guardado como Chat {num}")
         else:
             st.warning("No hay nada que guardar.")
+            
+    # 3. BOTON PARA ELIMINAR LOS CHATS 🗑️
+    
+    if st.button("Eliminar el chat 🗑️"):
+        st.session_state.chats = {}
 
     st.divider()
     st.subheader("Mis Chats Guardados")
