@@ -32,6 +32,7 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
     # Respuesta de la IA
    # Respuesta de la IA
    # Respuesta de la IA
+   # Respuesta de la IA
     with st.chat_message("assistant"):
         try:
             mensajes_for_api = [{"role": "system", "content": CONTEXTO_ASISTENTE}] + st.session_state.historial_chat
@@ -46,4 +47,4 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
             st.session_state.historial_chat.append({"role": "assistant", "content": respuesta})
             
         except Exception as e:
-            st.error(f"Error detallado: {e}")
+            st.error(f"Error real: {e}")
