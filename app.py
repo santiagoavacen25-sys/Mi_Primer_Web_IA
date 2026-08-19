@@ -274,8 +274,8 @@ with st.sidebar:
 
         st.rerun()
 
-if "chats" not in st.session_state:
-   diccionario = {"Nuevo char con SantiIA"}
+    if "chats" not in st.session_state:
+      mensajes = {"Nuevo char con SantiIA"}
 
 st.caption("Santi AI ⚡")
 
