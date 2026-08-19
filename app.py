@@ -266,7 +266,7 @@ with st.sidebar:
 
     st.title("⚙️ Configuración")
 
-    modelo = st.selectbox(
+    modelo =(
         "Modelo de IA",
         [
             "openai/gpt-oss-120b",
