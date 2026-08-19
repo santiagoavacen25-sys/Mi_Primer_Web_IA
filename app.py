@@ -35,7 +35,7 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
             mensajes_for_api = [{"role": "system", "content": CONTEXTO_ASISTENTE}] + st.session_state.historial_chat
             
             completion = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama3-8b-8192",model="llama-3.3-70b-versatile",
                 messages=mensajes_for_api
             )
             
@@ -44,4 +44,4 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
             st.session_state.historial_chat.append({"role": "assistant", "content": respuesta})
             
         except Exception as e:
-         st.error(f"Error real: {e}")
+         st.error("Hubo un error al conectar con la IA. Asegúrate de configurar la clave GROQ_API_KEY.")
