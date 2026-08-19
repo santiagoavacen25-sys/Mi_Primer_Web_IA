@@ -44,4 +44,4 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
             st.session_state.historial_chat.append({"role": "assistant", "content": respuesta})
             
         except Exception as e:
-         st.error("Hubo un error al conectar con la IA. Asegúrate de configurar la clave GROQ_API_KEY.")
+            st.error(f"Error real: {e}")
