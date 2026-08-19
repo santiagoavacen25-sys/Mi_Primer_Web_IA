@@ -405,7 +405,7 @@ Sé directo y evita respuestas innecesariamente largas.
 # HEADER
 # =========================================================
 
-st.markdown("""
+st.html("""
 <div class="hero">
     <div class="logo">⚡</div>
     <h1>Santi AI</h1>
@@ -414,4 +414,4 @@ st.markdown("""
         programar, crear y resolver problemas.
     </p>
 </div>
-""", unsafe_allow_html=True)
+""")
