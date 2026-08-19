@@ -35,7 +35,7 @@ Aquí tienes los datos principales sobre Santi:
 - Le apasiona la programación con Python, el desarrollo de aplicaciones web y proyectos de IA.
 - Sus proyectos principales incluyen una Calculadora Gamer y un Organizador de Metas y Tareas hecho en Streamlit.
 - Juega títulos como Fortnite, Rocket League y Minecraft en PC y consola.
-- Su equipo de desarrollo cuenta con almacenamiento SSD y tarjeta gráfica NVIDIA.
+- Su equipo de desarrollo cuenta con almacenamiento SSD y tarjeta gráfica NVIDIA GTX 1050 Ti.
 Si te preguntan sobre dudas de código en Python, responde con ejemplos sencillos y explicaciones claras.
 """
 
@@ -55,11 +55,10 @@ if preg := st.chat_input("Escribe una pregunta para el asistente..."):
     with st.chat_message("user"):
         st.markdown(preg)
 
-    # Generar la respuesta usando Ollama local
+    # Generar la respuesta usando el modelo liviano de Ollama en tu PC
     with st.chat_message("assistant"):
         with st.spinner("Pensando respuesta..."):
             try:
-                # Estructuramos los mensajes incluyendo el contexto del perfil
                 mensajes_para_ollama = [{"role": "system", "content": CONTEXTO_ASISTENTE}]
                 for m in st.session_state.historial_chat:
                     mensajes_para_ollama.append({"role": m["role"], "content": m["content"]})
@@ -76,15 +75,7 @@ if preg := st.chat_input("Escribe una pregunta para el asistente..."):
                 st.session_state.historial_chat.append({"role": "assistant", "content": texto_respuesta})
                 
             except Exception as e:
-                st.error("No se pudo conectar con Ollama. Verifica que la app de Ollama esté abierta en tu Mac.")
+                st.error("No se pudo conectar con Ollama. Asegúrate de tener la app de Ollama ejecutándose.")
 
-st.divider()
-
-# --- SETUP Y DETALLES DEL EQUIPO ---
-with st.expander("💻 Ver detalles del Setup"):
-    st.write("- **Procesador:** Intel / Apple Silicon")
-    st.write("- **Gráfica:** NVIDIA GTX 1050 Ti / MX450")
-    st.write("- **Almacenamiento:** 1 TB SSD")
-    st.write("- **Herramientas de desarrollo:** VS Code, Python, Streamlit, Ollama, Git & GitHub Desktop")
 
 st.markdown("<br><p style='text-align: center; font-size: 12px; color: gray;'>Sitio impulsado localmente con Python & Ollama 🐍</p>", unsafe_allow_html=True)
