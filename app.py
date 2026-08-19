@@ -282,23 +282,26 @@ with st.sidebar:
             st.success(f"Guardado como Chat {num}")
         else:
             st.warning("No hay nada que guardar.")
-            
-    # 3. BOTON PARA ELIMINAR LOS CHATS 🗑️
-    
-    if st.button("Eliminar el chat 🗑️"):
-        st.session_state.chat = {}
+
 
     st.divider()
     st.subheader("Mis Chats Guardados")
 
-    # 3. BUCLE FOR PARA MOSTRAR LOS CHATS
+    # 1. BUCLE FOR PARA MOSTRAR LOS CHATS
     for nombre_chat in st.session_state.chats:
         if st.button(f"💬 {nombre_chat}"):
-            st.session_state.messages = st.session_state.chats[nombre_chat]
-            st.rerun()
-
+         st.session_state.messages = st.session_state.chats[nombre_chat]
+         st.rerun() 
+          
     st.caption("Santi AI ⚡")
 
+  # 2. Botón para ELIMINAR solo este chat
+    
+    if st.button(f"🗑️ Borrar {nombre_chat}"):
+     del st.session_state.chats [nombre_chat]        
+    st.rerun
+        
+    
 
 # =========================================================
 # SUGERENCIAS
