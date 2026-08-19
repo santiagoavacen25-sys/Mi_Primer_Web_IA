@@ -32,7 +32,7 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
             mensajes_for_api = [{"role": "system", "content": CONTEXTO_ASISTENTE}] + st.session_state.historial_chat
             
             completion = client.chat.completions.create(
-                model="llama-3.1-8b-instant",  # <--- MODELO OFICIAL DE GROQ
+              model="llama3-8b-8192",  # <--- MODELO OFICIAL DE GROQ
                 messages=mensajes_for_api
             )
             
