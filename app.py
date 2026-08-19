@@ -1,5 +1,5 @@
 import streamlit as st
-import requests
+from groq import Groq
 
 st.set_page_config(page_title="Mi Perfil & Asistente IA", page_icon="⚡")
 
@@ -21,6 +21,13 @@ st.divider()
 st.subheader("🤖 Chatea con mi Asistente Virtual")
 st.caption("Pregúntale a mi IA sobre mis proyectos, mi setup, mis juegos o pedirle ayuda en Python.")
 
+# Conexión con Groq usando Secrets de Streamlit Cloud
+client = Groq(
+    api_key=st.secrets["GROQ_API_KEY"]
+)
+
+CONTEXTO_ASISTENTE = "Eres el asistente virtual personal de Santi. Responde brevemente en español."
+
 if "historial_chat" not in st.session_state:
     st.session_state.historial_chat = []
 
@@ -29,7 +36,7 @@ for mensaje in st.session_state.historial_chat:
     with st.chat_message(mensaje["role"]):
         st.markdown(mensaje["content"])
 
-# Entrada de chat para Ollama local
+# Entrada de chat
 if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
     st.session_state.historial_chat.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -37,17 +44,16 @@ if prompt := st.chat_input("Escribe una pregunta para el asistente..."):
 
     with st.chat_message("assistant"):
         try:
-            # Petición a la API local de Ollama (puerto 11434)
-            response = requests.post(
-                "http://localhost:11434/api/generate",
-                json={
-                    "model": "llama3.1:8b",
-                    "prompt": prompt,
-                    "stream": False
-                }
+            mensajes_for_api = [{"role": "system", "content": CONTEXTO_ASISTENTE}] + st.session_state.historial_chat
+            
+            completion = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=mensajes_for_api
             )
-            respuesta = response.json()["response"]
+            
+            respuesta = completion.choices[0].message.content
             st.markdown(respuesta)
             st.session_state.historial_chat.append({"role": "assistant", "content": respuesta})
+            
         except Exception as e:
-            st.error("Asegúrate de que Ollama esté corriendo en tu sistema (`ollama run llama3.1:8b`).")
+            st.error("Hubo un error al conectar con la IA. Asegúrate de configurar la clave GROQ_API_KEY.")
