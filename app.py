@@ -27,9 +27,23 @@ html, body, [class*="css"] {
 
 .stApp {
     background:
-        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
-        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(120, 80, 255, 0.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(0, 180, 255, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #070912 0%,
+            #0b1020 50%,
+            #070912 100%
+        );
+
     color: white;
 }
 
@@ -40,7 +54,10 @@ html, body, [class*="css"] {
     max-width: 1100px;
 }
 
-/* Header */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .hero {
     text-align: center;
     padding: 35px 20px 25px 20px;
@@ -50,8 +67,10 @@ html, body, [class*="css"] {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     width: 70px;
     height: 70px;
+
     border-radius: 22px;
 
     background: rgba(255,255,255,0.08);
@@ -61,13 +80,17 @@ html, body, [class*="css"] {
     -webkit-backdrop-filter: blur(20px);
 
     font-size: 34px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,0.3);
 }
 
 .hero h1 {
     font-size: 42px;
     margin: 18px 0 8px 0;
+
     font-weight: 800;
+
     letter-spacing: -1.5px;
 }
 
@@ -76,91 +99,152 @@ html, body, [class*="css"] {
     font-size: 16px;
 }
 
-/* Tarjetas transparentes */
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
 .glass {
     background: rgba(255,255,255,0.055);
+
     border: 1px solid rgba(255,255,255,0.10);
+
     border-radius: 22px;
+
     padding: 22px;
+
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 15px 50px rgba(0,0,0,0.18);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.18);
 }
 
-/* Botones */
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
 .stButton > button {
+
     width: 100%;
+
     border-radius: 14px;
+
     border: 1px solid rgba(255,255,255,0.12);
+
     background: rgba(255,255,255,0.07);
+
     color: white;
+
     font-weight: 600;
+
     padding: 10px 16px;
+
     transition: 0.2s;
 }
 
 .stButton > button:hover {
+
     background: rgba(255,255,255,0.13);
+
     border-color: rgba(255,255,255,0.25);
+
     transform: translateY(-1px);
 }
 
-/* Chat */
+/* =========================================================
+   CHAT
+   ========================================================= */
+
 [data-testid="stChatMessage"] {
+
     background: rgba(255,255,255,0.045);
+
     border: 1px solid rgba(255,255,255,0.07);
+
     border-radius: 18px;
+
     margin-bottom: 10px;
 }
 
-/* Input */
+/* =========================================================
+   INPUT
+   ========================================================= */
+
 [data-testid="stChatInput"] {
+
     border-radius: 18px;
 }
 
-/* Select */
+/* =========================================================
+   SELECT
+   ========================================================= */
+
 div[data-baseweb="select"] > div {
+
     background: rgba(255,255,255,0.06);
+
     border: 1px solid rgba(255,255,255,0.12);
+
     border-radius: 14px;
 }
 
-/* Footer */
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
 .footer {
+
     text-align: center;
+
     color: #737b91;
+
     font-size: 13px;
+
     padding: 30px 0 10px 0;
 }
 
 .small {
+
     color: #8e96aa;
+
     font-size: 13px;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
+
 # =========================================================
 # GROQ
 # =========================================================
 
 try:
+
     api_key = st.secrets["GROQ_API_KEY"]
-    client = Groq(api_key=api_key)
+
+    client = Groq(
+        api_key=api_key
+    )
+
 except Exception:
+
     client = None
 
+
 # =========================================================
-# SESSION
+# SESSION STATE
 # =========================================================
 
 if "messages" not in st.session_state:
+
     st.session_state.messages = []
 
+
 if "model" not in st.session_state:
-    st.session_state.model = "mixtral-8x7b-32768"
-    
+
+    st.session_state.model = "openai/gpt-oss-120b"
+
+
 # =========================================================
 # HEADER
 # =========================================================
@@ -180,59 +264,96 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
 # =========================================================
-# ESTADO API
+# COMPROBAR API
 # =========================================================
 
 if client is None:
 
     st.error(
-        "⚠️ La IA todavía no está configurada. "
-        "El administrador debe configurar GROQ_API_KEY en los Secrets de Streamlit."
+        "⚠️ La IA todavía no está configurada."
+    )
+
+    st.info(
+        "Configura GROQ_API_KEY en los Secrets de Streamlit."
     )
 
     st.stop()
 
+
 # =========================================================
-# PANEL
+# PANEL PRINCIPAL
 # =========================================================
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     st.markdown("""
     <div class="glass">
-        <div style="font-size:28px;">🤖</div>
-        <h3>Chat con IA</h3>
+
+        <div style="font-size:28px;">
+            🤖
+        </div>
+
+        <h3>
+            Chat con IA
+        </h3>
+
         <div class="small">
             Pregunta lo que quieras y recibe respuestas.
         </div>
+
     </div>
     """, unsafe_allow_html=True)
 
+
 with col2:
+
     st.markdown("""
     <div class="glass">
-        <div style="font-size:28px;">💻</div>
-        <h3>Programación</h3>
+
+        <div style="font-size:28px;">
+            💻
+        </div>
+
+        <h3>
+            Programación
+        </h3>
+
         <div class="small">
             Aprende Python, web, APIs y mucho más.
         </div>
+
     </div>
     """, unsafe_allow_html=True)
 
+
 with col3:
+
     st.markdown("""
     <div class="glass">
-        <div style="font-size:28px;">📚</div>
-        <h3>Aprendizaje</h3>
+
+        <div style="font-size:28px;">
+            📚
+        </div>
+
+        <h3>
+            Aprendizaje
+        </h3>
+
         <div class="small">
             Explicaciones sencillas paso a paso.
         </div>
+
     </div>
     """, unsafe_allow_html=True)
 
+
 st.write("")
+
 
 # =========================================================
 # SIDEBAR
@@ -243,26 +364,34 @@ with st.sidebar:
     st.title("⚙️ Configuración")
 
     modelo = st.selectbox(
-    "Modelo de IA",
-    [
-        "mixtral-8x7b-32768",
-        "qwen/qwen3-32b",
-        "openai/gpt-oss-120b"
-    ]
-)
+        "Modelo de IA",
+
+        [
+            "openai/gpt-oss-120b",
+            "openai/gpt-oss-20b",
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant"
+        ]
+    )
 
     st.session_state.model = modelo
 
     st.divider()
 
     if st.button("🗑️ Borrar conversación"):
+
         st.session_state.messages = []
+
         st.rerun()
 
     st.divider()
 
     st.caption("Santi AI")
-    st.caption("Desarrollado con Python + Streamlit + Groq")
+
+    st.caption(
+        "Desarrollado con Python + Streamlit + Groq"
+    )
+
 
 # =========================================================
 # SUGERENCIAS
@@ -272,12 +401,20 @@ if len(st.session_state.messages) == 0:
 
     st.markdown("""
     <div class="glass">
-        <h3>👋 ¿Qué quieres hacer?</h3>
+
+        <h3>
+            👋 ¿Qué quieres hacer?
+        </h3>
+
         <p class="small">
-            Puedes preguntarme sobre programación, videojuegos,
-            tecnología, tareas, matemáticas, ideas para proyectos
+
+            Puedes preguntarme sobre programación,
+            videojuegos, tecnología, tareas,
+            matemáticas, ideas para proyectos
             o prácticamente cualquier tema.
+
         </p>
+
     </div>
     """, unsafe_allow_html=True)
 
@@ -285,41 +422,77 @@ if len(st.session_state.messages) == 0:
 
     a, b, c = st.columns(3)
 
+
     with a:
+
         if st.button("🐍 Enséñame Python"):
+
             st.session_state.messages.append({
+
                 "role": "user",
-                "content": "Enséñame Python desde cero con un ejercicio sencillo."
+
+                "content":
+                "Enséñame Python desde cero con un ejercicio sencillo."
+
             })
+
             st.rerun()
+
 
     with b:
+
         if st.button("💻 Dame un proyecto"):
+
             st.session_state.messages.append({
+
                 "role": "user",
-                "content": "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
+
+                "content":
+                "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
+
             })
+
             st.rerun()
+
 
     with c:
+
         if st.button("🚀 Explícame IA"):
+
             st.session_state.messages.append({
+
                 "role": "user",
-                "content": "Explícame qué es la inteligencia artificial de forma sencilla."
+
+                "content":
+                "Explícame qué es la inteligencia artificial de forma sencilla."
+
             })
+
             st.rerun()
 
+
 # =========================================================
-# HISTORIAL
+# HISTORIAL DE CHAT
 # =========================================================
 
 for message in st.session_state.messages:
 
     with st.chat_message(
+
         message["role"],
-        avatar="🧑" if message["role"] == "user" else "⚡"
+
+        avatar=(
+            "🧑"
+            if message["role"] == "user"
+            else "⚡"
+        )
+
     ):
-        st.markdown(message["content"])
+
+        st.markdown(
+            message["content"]
+        )
+
 
 # =========================================================
 # CHAT
@@ -329,23 +502,44 @@ pregunta = st.chat_input(
     "Escribe tu pregunta para Santi AI..."
 )
 
+
 if pregunta:
 
-    # Usuario
+    # =====================================================
+    # GUARDAR MENSAJE DEL USUARIO
+    # =====================================================
+
     st.session_state.messages.append({
+
         "role": "user",
+
         "content": pregunta
+
     })
 
-    with st.chat_message("user", avatar="🧑"):
+
+    with st.chat_message(
+        "user",
+        avatar="🧑"
+    ):
+
         st.markdown(pregunta)
 
-    # IA
-    with st.chat_message("assistant", avatar="⚡"):
+
+    # =====================================================
+    # RESPUESTA DE LA IA
+    # =====================================================
+
+    with st.chat_message(
+        "assistant",
+        avatar="⚡"
+    ):
 
         try:
 
-            with st.spinner("Pensando..."):
+            with st.spinner(
+                "Pensando..."
+            ):
 
                 respuesta = client.chat.completions.create(
 
@@ -354,44 +548,72 @@ if pregunta:
                     messages=[
                         {
                             "role": "system",
+
                             "content": """
-Eres Santi AI, un asistente amigable, claro y útil.
+Eres Santi AI, un asistente amigable,
+claro y útil.
 
-Responde en español salvo que el usuario pida otro idioma.
+Responde en español salvo que
+el usuario pida otro idioma.
 
-Explica las cosas de forma sencilla cuando el usuario sea principiante.
+Explica las cosas de forma sencilla
+cuando el usuario sea principiante.
 
 Si el usuario pregunta programación:
+
 - explica paso a paso
 - proporciona código funcional
 - explica los errores
-- evita complicar innecesariamente las soluciones
+- evita complicar innecesariamente
+  las soluciones
 
 Si el usuario pide código:
-- entrega código completo cuando sea necesario
+
+- entrega código completo cuando
+  sea necesario
 - usa bloques de código
 - explica dónde debe colocarlo
 
 No inventes información.
-Si no sabes algo, dilo claramente.
 
-Sé directo y evita respuestas innecesariamente largas.
+Si no sabes algo,
+dilo claramente.
+
+Sé directo y evita respuestas
+innecesariamente largas.
 """
                         }
                     ] + st.session_state.messages,
 
                     temperature=0.7,
+
                     max_tokens=2048
                 )
 
-                texto = respuesta.choices[0].message.content
+
+                texto = (
+                    respuesta
+                    .choices[0]
+                    .message
+                    .content
+                )
+
 
                 st.markdown(texto)
 
+
+                # =========================================
+                # GUARDAR RESPUESTA
+                # =========================================
+
                 st.session_state.messages.append({
+
                     "role": "assistant",
+
                     "content": texto
+
                 })
+
 
         except Exception as e:
 
@@ -399,19 +621,19 @@ Sé directo y evita respuestas innecesariamente largas.
                 "❌ Ocurrió un error al conectar con la IA."
             )
 
-            st.code(str(e))
+            st.code(
+                str(e)
+            )
+
 
 # =========================================================
-# HEADER
+# FOOTER
 # =========================================================
 
-st.html("""
-<div class="hero">
-    <div class="logo">⚡</div>
-    <h1>Santi AI</h1>
-    <p>
-        Tu asistente de inteligencia artificial para aprender,
-        programar, crear y resolver problemas.
-    </p>
+st.markdown("""
+<div class="footer">
+
+    Santi AI ⚡ · Python + Streamlit + Groq
+
 </div>
-""")
+""", unsafe_allow_html=True)
