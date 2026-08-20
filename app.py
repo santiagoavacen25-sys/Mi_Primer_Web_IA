@@ -38,17 +38,17 @@ st.markdown("""
  
 .tarjeta-logo img{
     background: rgba(20, 20, 35, 0.6);
-    border-redius: 24px;
+    border-radius: 24px;
     padding: 15px;
     border: 1px solid rgba(140, 80, 255, 0.3);
-    box-shdown: 0 0 25px rgba(120, 255, 0.3)
-    transition: all 0.3 ease;    
+    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3);
+    transition: all 0.3s ease;    
 
 }
 
-tarjeta-logo img:hover {
-    transform: transtaleY(-5px);
-    box-shadown: 0 0 40px rgba( 140, 80, 255, 0.6);
+.tarjeta-logo img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba( 140, 80, 255, 0.6);
     
 }
 
