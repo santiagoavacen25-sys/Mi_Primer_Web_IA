@@ -288,7 +288,7 @@ with st.sidebar:
     st.subheader("Mis Chats Guardados")
 
     # 1. BUCLE FOR PARA MOSTRAR LOS CHATS
-    for nombre_chat in st.session_state.chats:
+    for nombre_chat in list(st.session_state.chats):
         if st.button(f"💬 {nombre_chat}"):
          st.session_state.messages = st.session_state.chats[nombre_chat]
          st.rerun() 
