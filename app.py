@@ -17,10 +17,12 @@ st.set_page_config(
 # =========================================================
 
 
-col1 ,col2, col3, = st.columns([1, 1, 1])
+# Definimos las 3 columnas sin repetir variables
+col1, col2, col3 = st.columns([1, 1, 1])
 
 with col2:
-      st.image("logo.jpeg", width=150)
+    # Usamos la L mayúscula para que coincida con tu archivo Logo.jpeg
+    st.image("Logo.jpeg", width=150)
 
 
 # =========================================================
