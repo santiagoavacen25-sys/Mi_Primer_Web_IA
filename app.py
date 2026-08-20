@@ -200,19 +200,6 @@ if "chats" not in st.session_state:
 
 
 # =========================================================
-# HEADER
-# =========================================================
-
-st.markdown("""
-<div class="hero">
-<div class="logo">⚡</div>
-<h1>Santi IA</h1>
-<p>Tu asistente de inteligencia artificial para aprender, programar, crear y resolver problemas.</p>
-</div>
-""", unsafe_allow_html=True)
-
-
-# =========================================================
 # COMPROBAR API
 # =========================================================
 
