@@ -8,7 +8,7 @@ from groq import Groq
 col1 ,col2, col3=st.columns([1, 1, 1])
 
 with col2:
-    st.image("/Users/santiagoavalos/Downloads/Gemini_Generated_Image_olxfs4olxfs4olxf.jpeg", width=150)
+    st.image("Gemini_Generated_Image_olxfs4olxfs4olxf.jpeg", width=150)
     
 
 st.set_page_config(
