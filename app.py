@@ -17,7 +17,7 @@ st.set_page_config(
 
 
 # Definimos las 3 columnas sin repetir variables
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2, col3 = st.columns([1, 3, 1])
 
 with col2:
     # Usamos la L mayúscula para que coincida con tu archivo Logo.jpeg
