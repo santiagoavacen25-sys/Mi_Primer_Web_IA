@@ -297,7 +297,7 @@ with st.sidebar:
              
         if st.button(f"🗑️ Borrar {nombre_chat}"):
             del st.session_state.chats[nombre_chat]        
-            st.rerun
+            st.rerun()
         
         st.caption("Santi AI ⚡")
 
