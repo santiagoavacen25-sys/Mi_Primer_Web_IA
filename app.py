@@ -5,7 +5,7 @@ from groq import Groq
 # CONFIGURACIÓN
 # =========================================================
 
-coli1 ,coli2, coli3=st.columnas([1, 1, 1])
+col1 ,col2, col3=st.columns([1, 1, 1])
 
 with col2:
     st.image("/Users/santiagoavalos/Downloads/Gemini_Generated_Image_olxfs4olxfs4olxf.jpeg", width=150)
