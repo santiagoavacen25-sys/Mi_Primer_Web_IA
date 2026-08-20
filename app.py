@@ -34,7 +34,9 @@ st.markdown("""
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-.tarjeta-logo{
+ /* Esto le aplica los bordes redondeados y el brillo directamente a la imagen */
+ 
+.tarjeta-logo img{
     background: rgba(20, 20, 35, 0.6);
     border-redius: 24px;
     padding: 15px;
@@ -44,7 +46,7 @@ st.markdown("""
 
 }
 
-tarjeta-logo:hover {
+tarjeta-logo img:hover {
     transform: transtaleY(-5px);
     box-shadown: 0 0 40px rgba( 140, 80, 255, 0.6);
     
