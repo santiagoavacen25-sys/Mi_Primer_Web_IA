@@ -5,18 +5,23 @@ from groq import Groq
 # CONFIGURACIÓN
 # =========================================================
 
-col1 ,col2, col3=st.columns([1, 1, 1])
-
-with col2:
-    st.image("Gemini_Generated_Image_olxfs4olxfs4olxf.jpeg", width=150)
-    
-
 st.set_page_config(
     page_title="Santi AI ⚡",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# =========================================================
+# LOGO Y CABECERA
+# =========================================================
+
+
+col1 ,col2, col3, = st.columns([1, 1, 1])
+
+with col2:
+      st.image("logo.jpeg", width=150)
+
 
 # =========================================================
 # ESTILOS
