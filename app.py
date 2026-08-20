@@ -19,8 +19,10 @@ st.set_page_config(
 col1, col2, col3 = st.columns([1, 4, 1])
 
 with col2:
-    # Usamos la L mayúscula para que coincida con tu archivo Logo.jpeg
-    st.image("Logo.jpeg", use_container_width=True)
+    st.markdown('<div class="tarjeta-logo">', unsafe_allow_html= True)
+    st.image("Logo.jpeg" , use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+        
 
 
 # =========================================================
@@ -31,6 +33,25 @@ st.markdown("""
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.tarjeta-logo{
+    background: rgba(20, 20, 35, 0.6);
+    border-redius: 24px;
+    padding: 15px;
+    border: 1px solid rgba(140, 80, 255, 0.3);
+    box-shdown: 0 0 25px rgba(120, 255, 0.3)
+    transition: all 0.3 ease;    
+
+}
+
+tarjeta-logo:hover {
+    transform: transtaleY(-5px);
+    box-shadown: 0 0 40px rgba( 140, 80, 255, 0.6);
+    
+}
+
+
+
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
