@@ -335,12 +335,13 @@ with st.sidebar:
     st.divider()
     st.subheader("Mis Chats Guardados")
 
-    # 2. MOSTRAR Y CARGAR EL CHAT GUARDADO
+    # Cargar mensajes automáticamente al iniciar la app
+if "messages" not in st.session_state:
     if os.path.exists("chats_guardados.json"):
-        if st.button("💬 Cargar Chat Guardado ⚡"):
-            with open("chats_guardados.json", "r") as archivo:
-                st.session_state.messages = json.load(archivo)
-                st.rerun() 
+        with open("chats_guardados.json", "r") as archivo:
+            st.session_state.messages = json.load(archivo)
+    else:
+        st.session_state.messages = []
     st.caption("Santi AI ⚡")
         
 
