@@ -335,6 +335,10 @@ with st.sidebar:
         st.rerun()
 
     st.divider()
+    # Guarda de forma automática en segundo plano
+with open("chats_guardados.json", "w") as archivo:
+    json.dump(st.session_state.messages, archivo)
+    
     st.caption("Santi AI ⚡")
         
 
