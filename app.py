@@ -14,54 +14,11 @@ st.set_page_config(
 # LOGO Y CABECERA
 # =========================================================
 
-# Inyectamos el CSS para controlar el tamaño y estilo de la imagen
-        
-st.markdown("""
-    <style>
-    /* Contenedor principal */
-    .tarjeta-logo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-    }
-    
-    /* Estilo base de la imagen */
-    .tarjeta-logo img {
-        max-width: 220px !important;            /* Tamaño visible del logo */
-        border-radius: 50% !important;           /* Recorte totalmente circular */
-        object-fit: cover;
-        
-        /* Brillo suave por defecto en estado normal */
-        box-shadow: 0 0 20px rgba(0, 243, 255, 0.3) !important;
-        
-        /* Transición suave para la animación (0.4 segundos) */
-        transition: transform 0.4s ease, box-shadow 0.4s ease !important;
-        cursor: pointer;
-    }
-
-    /* EFECTO HOVER: Se activa al pasar el mouse encima */
-    .tarjeta-logo img:hover {
-        /* Se agranda un poco y sube un poco */
-        transform: scale(1.05) translateY(-5px) !important;
-        
-        /* Resplandor neón doble (Cian + Rosa/Morado) como en tu imagen */
-        box-shadow: 
-            -10px 0 30px #00f3ff, 
-            10px 0 30px #ff00ff,
-            0 0 50px rgba(0, 243, 255, 0.8) !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
- 
- #Las 3 columnas para centrar la imaguen en la pantalla 
- 
-col1, col2, col3 = st.columns([1,4,1])
+# Las 3 columnas para centrar la imagen en la pantalla 
+col1, col2, col3 = st.columns([1, 4, 1])
 with col2:
-    st.markdown('<div class="tarjeta-logo">', unsafe_allow_html=True)
     st.image("Logo.jpeg", use_container_width=False)
-    st.markdown('</div>', unsafe_allow_html=True)
-                       
+
 
 # =========================================================
 # ESTILOS
@@ -72,26 +29,30 @@ st.markdown("""
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
- /* Esto le aplica los bordes redondeados y el brillo directamente a la imagen */
- 
-.tarjeta-logo img{
-    background: rgba(20, 20, 35, 0.6);
-    border-radius: 24px;
-    padding: 15px;
-    border: 1px solid rgba(140, 80, 255, 0.3);
-    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3);
-    transition: all 0.3s ease;    
+/* =========================================================
+   LOGO Y HOVER DE IMAGEN
+   ========================================================= */
 
+div[data-testid="stImage"] img {
+    background: rgba(20, 20, 35, 0.6) !important;
+    border-radius: 24px !important;
+    padding: 15px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    display: block !important;
+    margin: 0 auto !important;
+    max-width: 220px !important;
 }
 
-.tarjeta-logo img:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 40px rgba( 140, 80, 255, 0.6);
-    
+div[data-testid="stImage"] img:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
-
-
+/* =========================================================
+   ESTILOS GENERALES
+   ========================================================= */
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
@@ -342,23 +303,20 @@ with st.sidebar:
         else:
             st.warning("No hay nada que guardar.")
 
-
     st.divider()
     st.subheader("Mis Chats Guardados")
 
-    # 1. BUCLE FOR PARA MOSTRAR LOS CHATS
+    # BUCLE FOR PARA MOSTRAR Y ELIMINAR CHATS
     for nombre_chat in list(st.session_state.chats):
         if st.button(f"💬 {nombre_chat}"):
-         st.session_state.messages = st.session_state.chats[nombre_chat]
-         st.rerun() 
+            st.session_state.messages = st.session_state.chats[nombre_chat]
+            st.rerun() 
           
-  # 2. Botón para ELIMINAR solo este chat
-             
         if st.button(f"🗑️ Borrar {nombre_chat}"):
             del st.session_state.chats[nombre_chat]        
             st.rerun()
         
-        st.caption("Santi AI ⚡")
+    st.caption("Santi AI ⚡")
 
 # =========================================================
 # SUGERENCIAS
@@ -382,7 +340,6 @@ o prácticamente cualquier tema.
 
     a, b, c = st.columns(3)
 
-
     with a:
 
         if st.button("🐍 Enséñame Python"):
@@ -394,7 +351,6 @@ o prácticamente cualquier tema.
 
             st.rerun()
 
-
     with b:
 
         if st.button("💻 Dame un proyecto"):
@@ -405,7 +361,6 @@ o prácticamente cualquier tema.
             })
 
             st.rerun()
-
 
     with c:
 
@@ -443,7 +398,6 @@ pregunta = st.chat_input(
     "Escribe tu pregunta para Santi IA..."
 )
 
-
 if pregunta:
 
     # =====================================================
@@ -461,7 +415,6 @@ if pregunta:
     ):
 
         st.markdown(pregunta)
-
 
     # =====================================================
     # RESPUESTA DE LA IA
@@ -519,7 +472,6 @@ innecesariamente largas.
                     st.session_state.messages
                 )
 
-
                 respuesta = client.chat.completions.create(
                     model=st.session_state.model,
                     messages=mensajes,
@@ -527,12 +479,9 @@ innecesariamente largas.
                     max_tokens=2048
                 )
 
-
                 texto = respuesta.choices[0].message.content
 
-
                 st.markdown(texto)
-
 
                 # =========================================
                 # GUARDAR RESPUESTA
@@ -542,7 +491,6 @@ innecesariamente largas.
                     "role": "assistant",
                     "content": texto
                 })
-
 
         except Exception as e:
 
