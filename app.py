@@ -24,171 +24,65 @@ with col2:
 # ESTILOS
 # =========================================================
 
+# =========================================================
+# LOGO Y CABECERA (HERO)
+# =========================================================
+
+# Inyectamos el CSS para centrar absolutamente todo el bloque hero
 st.markdown("""
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-/* =========================================================
-   LOGO Y HOVER DE IMAGEN
-   ========================================================= */
-
-div[data-testid="stImage"] img {
-    background: rgba(20, 20, 35, 0.6) !important;
-    border-radius: 24px !important;
-    padding: 15px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
-    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
-    transition: all 0.3s ease !important;
-    display: block !important;
-    margin: 0 auto !important;
-    max-width: 220px !important;
-}
-
-div[data-testid="stImage"] img:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
-}
-
-/* =========================================================
-   ESTILOS GENERALES
-   ========================================================= */
-
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
-
-.stApp {
-    background:
-        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
-        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
-    color: white;
-}
-
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    max-width: 1100px;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.hero {
-    text-align: center;
-    padding: 35px 20px 25px 20px;
-}
-
-.logo {
-    display: inline-flex;
+.hero-container {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 70px;
-    height: 70px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    font-size: 34px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-.hero h1 {
-    font-size: 42px;
-    margin: 18px 0 8px 0;
-    font-weight: 800;
-    letter-spacing: -1.5px;
-}
-
-.hero p {
-    color: #aeb6cc;
-    font-size: 16px;
-}
-
-/* =========================================================
-   TARJETAS
-   ========================================================= */
-
-.glass {
-    background: rgba(255,255,255,0.055);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 22px;
-    padding: 22px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 15px 50px rgba(0,0,0,0.18);
-}
-
-/* =========================================================
-   BOTONES
-   ========================================================= */
-
-.stButton > button {
-    width: 100%;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.07);
-    color: white;
-    font-weight: 600;
-    padding: 10px 16px;
-    transition: 0.2s;
-}
-
-.stButton > button:hover {
-    background: rgba(255,255,255,0.13);
-    border-color: rgba(255,255,255,0.25);
-    transform: translateY(-1px);
-}
-
-/* =========================================================
-   CHAT
-   ========================================================= */
-
-[data-testid="stChatMessage"] {
-    background: rgba(255,255,255,0.045);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 18px;
-    margin-bottom: 10px;
-}
-
-/* =========================================================
-   INPUT
-   ========================================================= */
-
-[data-testid="stChatInput"] {
-    border-radius: 18px;
-}
-
-/* =========================================================
-   SELECT
-   ========================================================= */
-
-div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer {
     text-align: center;
-    color: #737b91;
-    font-size: 13px;
-    padding: 30px 0 10px 0;
+    width: 100%;
+    margin: 10px 0 30px 0;
 }
 
-.small {
-    color: #8e96aa;
-    font-size: 13px;
+.hero-logo-card {
+    background: rgba(20, 20, 35, 0.6);
+    border-radius: 28px;
+    padding: 18px;
+    border: 1px solid rgba(140, 80, 255, 0.35);
+    box-shadow: 0 0 30px rgba(120, 80, 255, 0.3);
+    transition: all 0.4s ease;
+    display: inline-block;
+    cursor: pointer;
 }
 
+.hero-logo-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 
+        -10px 0 30px #00f3ff, 
+        10px 0 30px #ff00ff,
+        0 0 50px rgba(0, 243, 255, 0.8);
+}
+
+.hero-logo-card img {
+    max-width: 180px;
+    height: auto;
+    border-radius: 18px;
+    display: block;
+}
+
+.hero-title {
+    font-size: 38px;
+    font-weight: 800;
+    margin-top: 15px;
+    background: linear-gradient(90deg, #ffffff 0%, #aeb6cc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
 </style>
+
+<div class="hero-container">
+    <div class="hero-logo-card">
+        <img src="https://raw.githubusercontent.com/streamlit/streamlit/main/docs/static/logo.png" alt="Logo" id="logo-img">
+    </div>
+</div>
 """, unsafe_allow_html=True)
 
 
