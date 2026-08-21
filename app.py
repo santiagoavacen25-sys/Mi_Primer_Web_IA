@@ -1,8 +1,20 @@
+import json
+import os
 import streamlit as st
 from groq import Groq
 
 # =========================================================
-# CONFIGURACIÓN DE PÁGINA
+# CARGA AUTOMÁTICA DEL HISTORIAL
+# =========================================================
+if "messages" not in st.session_state:
+    if os.path.exists("chats_guardados.json"):
+        with open("chats_guardados.json", "r") as archivo:
+            st.session_state.messages = json.load(archivo)
+    else:
+        st.session_state.messages = []
+
+# =========================================================
+# CONFIGURACIÓN
 # =========================================================
 st.set_page_config(
     layout="wide",
@@ -145,7 +157,7 @@ div[data-testid="stImage"] img:hover {
 st.image("Logo.jpeg", use_container_width=False)
 
 # =========================================================
-# GROQ
+# GROQ CONECTION
 # =========================================================
 try:
     api_key = st.secrets["GROQ_API_KEY"]
@@ -156,11 +168,11 @@ except Exception:
 # =========================================================
 # SESSION STATE
 # =========================================================
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
 if "model" not in st.session_state:
-    st.session_state.model = "llama3-8b-8192"
+    st.session_state.model = "llama-3.3-70b-versatile"
+    
+if "chats" not in st.session_state:
+    st.session_state.chats = {} 
 
 # =========================================================
 # COMPROBAR API
@@ -213,6 +225,8 @@ with st.sidebar:
 
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
+        if os.path.exists("chats_guardados.json"):
+            os.remove("chats_guardados.json")
         st.rerun()
 
     st.divider()
@@ -262,7 +276,7 @@ o prácticamente cualquier tema.
             st.rerun()
 
 # =========================================================
-# HISTORIAL
+# HISTORIAL EN PANTALLA
 # =========================================================
 for message in st.session_state.messages:
     with st.chat_message(
@@ -272,7 +286,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # =========================================================
-# CHAT
+# CHAT Y RESPUESTA DE LA IA
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
@@ -291,39 +305,7 @@ if pregunta:
                 mensajes = [
                     {
                         "role": "system",
-                        "content": """
-Eres Santi AI, un asistente amigable,
-claro y útil.
-
-Responde en español salvo que
-el usuario pida otro idioma.
-
-Explica las cosas de forma sencilla
-cuando el usuario sea principiante.
-
-Si el usuario pregunta programación:
-
-- explica paso a paso
-- proporciona código funcional
-- explica los errores
-- evita complicar innecesariamente
-  las soluciones
-
-Si el usuario pide código:
-
-- entrega código completo cuando
-  sea necesario
-- usa bloques de código
-- explica dónde debe colocarlo
-
-No inventes información.
-
-Si no sabes algo,
-dilo claramente.
-
-Sé directo y evita respuestas
-innecesariamente largas.
-"""
+                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
                     }
                 ]
                 mensajes.extend(st.session_state.messages)
@@ -338,10 +320,15 @@ innecesariamente largas.
                 texto = respuesta.choices[0].message.content
                 st.markdown(texto)
 
+                # Guardar respuesta en la sesión
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": texto
                 })
+
+                # GUARDADO AUTOMÁTICO EN EL ARCHIVO JSON
+                with open("chats_guardados.json", "w") as archivo:
+                    json.dump(st.session_state.messages, archivo)
 
         except Exception as e:
             st.error("❌ Ocurrió un error al conectar con la IA.")
