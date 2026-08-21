@@ -345,29 +345,30 @@ with st.sidebar:
 
     # BUCLE FOR PARA MOSTRAR Y ELIMINAR CHATS
     for nombre_chat in list(st.session_state.chats):
-        if st.button(f"💬 {nombre_chat}"):
-            st.session_state.messages = st.session_state.chats[nombre_chat]
-            st.rerun() 
-          
+   
         if st.button(f"🗑️ Borrar {nombre_chat}"):
             del st.session_state.chats[nombre_chat]        
             st.rerun()
+    
+    #Boton para guardar los chats
+    if st.button("Guardar chat"):
+           #. Checamos si la lista de mensajes no esta vacia
+           if len(st.session_state.messages) > 0:
+               
+               # 2. Abrimis (o Ceramos) el archivo en modo escriturea('w')
+               with open("chats_guardados.json", "w") as archivo:
+                   
+                   # 3. Metemos la lista de mensajes dentro del archivo
+                   json.dump(st.session_state.messages, archivo)
+                   
+                   st.success("!Chat guardados con , éxito!")
+           else:
+               st.warning("Aun no hay mensajes para guardar.")
+    
     st.caption("Santi AI ⚡")    
     
     
-    if st.button("Guardar chat"):
-       #. Checamos si la lista de mensajes no esta vacia
-       if len(st.session_state.messages) > 0:
-           
-           # 2. Abrimis (o Ceramos) el archivo en modo escriturea('w')
-           with open("chats_guardados.json", "w") as archivo:
-               
-               # 3. Metemos la lista de mensajes dentro del archivo
-               json.dump(st.session_state.messages, archivo)
-               
-               st.success("!Chat guardados con , éxito!")
-       else:
-           st.warning("Aun no hay mensajes para guardar.")
+    
     
     
     
