@@ -44,21 +44,13 @@ html, body, [class*="css"] {
     max-width: 1100px;
 }
 
-/* Seleccionas la barra lateral */
+    /* Seleccionas la barra lateral */
 
-with st.sidebar:
-    st.title("⚙️ Configuración")
-    st.divider()
-
-    # BOTÓN PARA NUEVO CHAT (Limpia pantalla y el archivo)
-    if st.button("➕ Nuevo chat"):
-        st.session_state.messages = []
-        if os.path.exists("chats_guardados.json"):
-            os.remove("chats_guardados.json")
-        st.rerun()
-
-    st.divider()
-    st.caption("Santi AI ⚡")
+    section[data-testid="stSidebar"] {
+        background-color: rgba(18 , 20, 26, 0.2) !important;
+        backdrop-filter: blur(12px) !important;
+            
+    }
  
 /* Hacer transparente la barra superior de Streamlit */
 
@@ -335,22 +327,14 @@ with st.sidebar:
     st.title("⚙️ Configuración")
     st.divider()
 
-    # 1. BOTÓN PARA LIMPIAR LA PANTALLA
+    # BOTÓN PARA NUEVO CHAT (Limpia pantalla y el archivo)
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
+        if os.path.exists("chats_guardados.json"):
+            os.remove("chats_guardados.json")
         st.rerun()
 
-    # 2. BOTÓN PARA CARG
     st.divider()
-    st.subheader("Mis Chats Guardados")
-
-    # Cargar mensajes automáticamente al iniciar la app
-if "messages" not in st.session_state:
-    if os.path.exists("chats_guardados.json"):
-        with open("chats_guardados.json", "r") as archivo:
-            st.session_state.messages = json.load(archivo)
-    else:
-        st.session_state.messages = []
     st.caption("Santi AI ⚡")
         
 
