@@ -50,7 +50,13 @@ section[data-testid="stSidebar"] {
         
 }
  
+/* Hacer transparente la barra superior de Streamlit */
 
+header[data-testid="stHeader"]{
+    background: transparent !important;
+    background-color: rgba(0, 0, 0.2) !important;    
+    
+}
 
 
 
