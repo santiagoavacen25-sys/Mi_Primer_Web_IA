@@ -1,35 +1,24 @@
 import json
 import os
-import time
 import streamlit as st
 from groq import Groq
 
 # =========================================================
-# ARCHIVO DE HISTORIAL
+# CARGA AUTOMÁTICA DEL HISTORIAL AL INICIAR
 # =========================================================
-ARCHIVO_CHATS = "chats_guardados.json"
-
-def cargar_todos_los_chats():
-    if os.path.exists(ARCHIVO_CHATS):
-        try:
-            with open(ARCHIVO_CHATS, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return {}
-    return {}
-
-def guardar_todos_los_chats(chats):
-    with open(ARCHIVO_CHATS, "w", encoding="utf-8") as f:
-        json.dump(chats, f, ensure_ascii=False, indent=2)
+if "messages" not in st.session_state:
+    if os.path.exists("chats_guardados.json"):
+        with open("chats_guardados.json", "r") as archivo:
+            st.session_state.messages = json.load(archivo)
+    else:
+        st.session_state.messages = []
 
 # =========================================================
 # CONFIGURACIÓN DE PÁGINA
 # =========================================================
 st.set_page_config(
-    page_title="Santi AI",
-    page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # =========================================================
@@ -52,18 +41,19 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    padding-top: 5rem !important; 
+    padding-top: 7rem !important; 
     padding-bottom: 2rem;
     max-width: 1100px;
 }
 
 section[data-testid="stSidebar"] {
-    background-color: rgba(18, 20, 26, 0.6) !important;
+    background-color: rgba(18 , 20, 26, 0.2) !important;
     backdrop-filter: blur(12px) !important;
 }
 
 header[data-testid="stHeader"]{
     background: transparent !important;
+    background-color: rgba(18, 20, 26, 0.2) !important;    
 }
 
 div[data-testid="stImage"] {
@@ -92,6 +82,16 @@ div[data-testid="stImage"] img {
 div[data-testid="stImage"] img:hover {
     transform: translateY(-5px) !important;
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
+}
+
+@media (max-width: 768px) {
+    .block-container {
+        padding-top: 2rem !important;
+    }
+    div[data-testid="stImage"] img {
+        max-width: 150px !important;
+        padding: 10px !important;
+    }
 }
 
 .glass {
@@ -147,7 +147,12 @@ div[data-testid="stImage"] img:hover {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# GROQ CONEXIÓN
+# LOGO Y CABECERA
+# =========================================================
+st.image("Logo.jpeg", use_container_width=False)
+
+# =========================================================
+# CONEXIÓN A GROQ
 # =========================================================
 try:
     api_key = st.secrets["GROQ_API_KEY"]
@@ -156,23 +161,11 @@ except Exception:
     client = None
 
 # =========================================================
-# SESSION STATE E HISTORIAL
+# SESSION STATE
 # =========================================================
-todos_los_chats = cargar_todos_los_chats()
 
-if "current_chat_id" not in st.session_state:
-    st.session_state.current_chat_id = None
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# MODELO ACTIVO EN GROQ (ACTUALIZADO)
-st.session_state.model = "openai/gpt-oss-20b"
-
-# =========================================================
-# LOGO Y CABECERA
-# =========================================================
-st.image("Logo.jpeg", use_container_width=False)
+if "model" not in st.session_state:
+    st.session_state.model = "llama-3.1-8b-instant"
 
 # =========================================================
 # COMPROBAR API
@@ -181,39 +174,6 @@ if client is None:
     st.error("⚠️ La IA todavía no está configurada.")
     st.info("Configura GROQ_API_KEY en los Secrets de Streamlit.")
     st.stop()
-
-# =========================================================
-# SIDEBAR (HISTORIAL Y NUEVO CHAT)
-# =========================================================
-with st.sidebar:
-    st.title("⚙️ Menú")
-    
-    if st.button("➕ Nuevo chat", use_container_width=True):
-        st.session_state.current_chat_id = None
-        st.session_state.messages = []
-        st.rerun()
-
-    st.divider()
-    st.markdown("### 💬 Historial de Chats")
-
-    if todos_los_chats:
-        for chat_id, chat_data in reversed(list(todos_los_chats.items())):
-            titulo = chat_data.get("titulo", "Chat sin título")
-            if len(titulo) > 28:
-                titulo = titulo[:25] + "..."
-            
-            es_activo = (st.session_state.current_chat_id == chtoat_id)
-            label = f"📌 {titulo}" if es_activo else f"💬 {titulo}"
-            
-            if st.button(label, key=f"chat_{chat_id}", use_container_width=True):
-                st.session_state.current_chat_id = chat_id
-                st.session_state.messages = chat_data.get("messages", [])
-                st.rerun()
-    else:
-        st.caption("Aún no hay chats guardados.")
-
-    st.divider()
-    st.caption("Santi AI ⚡")
 
 # =========================================================
 # PANEL PRINCIPAL
@@ -250,7 +210,30 @@ with col3:
 st.write("")
 
 # =========================================================
-# SUGERENCIAS INICIALES
+# SIDEBAR
+# =========================================================
+with st.sidebar:
+    st.title("⚙️ Configuración")
+    st.divider()
+
+    # Selector de modelo directo
+    st.session_state.model = st.selectbox(
+        "Modelo de IA",
+        ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"],
+        index=0
+    )
+
+    if st.button("➕ Nuevo chat"):
+        st.session_state.messages = []
+        if os.path.exists("chats_guardados.json"):
+            os.remove("chats_guardados.json")
+        st.rerun()
+
+    st.divider()
+    st.caption("Santi AI ⚡")
+
+# =========================================================
+# SUGERENCIAS
 # =========================================================
 if len(st.session_state.messages) == 0:
     st.markdown("""
@@ -293,7 +276,7 @@ o prácticamente cualquier tema.
             st.rerun()
 
 # =========================================================
-# MOSTRAR MENSAJES EN PANTALLA
+# HISTORIAL EN PANTALLA
 # =========================================================
 for message in st.session_state.messages:
     with st.chat_message(
@@ -303,18 +286,11 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # =========================================================
-# PROCESAR NUEVO MENSAJE Y GUARDADO AUTOMÁTICO
+# CHAT Y RESPUESTA DE LA IA
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
 if pregunta:
-    if st.session_state.current_chat_id is None:
-        st.session_state.current_chat_id = str(int(time.time()))
-        titulo_chat = pregunta[:30] if len(pregunta) > 30 else pregunta
-    else:
-        chat_actual = todos_los_chats.get(st.session_state.current_chat_id, {})
-        titulo_chat = chat_actual.get("titulo", pregunta[:30])
-
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
@@ -344,17 +320,15 @@ if pregunta:
                 texto = respuesta.choices[0].message.content
                 st.markdown(texto)
 
+                # Guardar respuesta en la sesión
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": texto
                 })
 
-                todos_los_chats[st.session_state.current_chat_id] = {
-                    "titulo": titulo_chat,
-                    "messages": st.session_state.messages
-                }
-                guardar_todos_los_chats(todos_los_chats)
-                st.rerun()
+                # GUARDADO AUTOMÁTICO EN EL ARCHIVO JSON
+                with open("chats_guardados.json", "w") as archivo:
+                    json.dump(st.session_state.messages, archivo)
 
         except Exception as e:
             st.error("❌ Ocurrió un error al conectar con la IA.")
