@@ -42,6 +42,18 @@ html, body, [class*="css"] {
     max-width: 1100px;
 }
 
+/* Seleccionas la barra lateral */
+
+section[data-testid="stSidebar"] {
+    background-color: rgba(18 , 20, 26, 0.2 !important;
+    backdrop-fileter: blur(12px) !important;
+        
+}
+ 
+
+
+
+
 /* =========================================================
    LOGO CENTRADO Y ADAPTABLE
    ========================================================= */
