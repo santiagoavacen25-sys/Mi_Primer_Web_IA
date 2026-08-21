@@ -326,33 +326,22 @@ with st.sidebar:
     st.title("⚙️ Configuración")
     st.divider()
 
-    # 1. BOTÓN PARA BORRAR / NUEVO CHAT
+    # 1. BOTÓN PARA LIMPIAR LA PANTALLA
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
         st.rerun()
 
-    st.divider() 
+    st.divider()
     st.subheader("Mis Chats Guardados")
-    
-    
-    
-    # BUCLE FOR PARA MOSTRAR Y ELIMINAR CHATS
+
+    # 2. CARGAR Y BORRAR CHATS
     for nombre_chat in list(st.session_state.chats):
-   
         if st.button(f"🗑️ Borrar {nombre_chat}"):
             del st.session_state.chats[nombre_chat]        
             st.rerun()
-    
-    
-    st.caption("Santi AI ⚡")    
-    
-    
-    
-    
-    
-    
-    
 
+    st.caption("Santi AI ⚡")
+        
 
 # =========================================================
 # SUGERENCIAS
