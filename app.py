@@ -59,7 +59,7 @@ st.markdown("""
 col1, col2, col3 = st.columns([1,4,1])
 with col2:
     st.markdown('<div class="tarjeta-logo">', unsafe_allow_html=True)
-    st.image("Logo.jpeg", use_conteiner_width=False)
+    st.image("Logo.jpeg", use_container_width=False)
     st.markdown('</div>', unsafe_allow_html=True)
                        
 
