@@ -331,18 +331,11 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-    # 2. BOTÓN PARA GUARDAR
-    if st.button("💾 Guardar chat"):
-        if len(st.session_state.messages) > 0:
-            num = len(st.session_state.chats) + 1
-            st.session_state.chats[f"Chat {num}"] = st.session_state.messages.copy()
-            st.success(f"Guardado como Chat {num}")
-        else:
-            st.warning("No hay nada que guardar.")
-
-    st.divider()
+    st.divider() 
     st.subheader("Mis Chats Guardados")
-
+    
+    
+    
     # BUCLE FOR PARA MOSTRAR Y ELIMINAR CHATS
     for nombre_chat in list(st.session_state.chats):
    
@@ -350,19 +343,6 @@ with st.sidebar:
             del st.session_state.chats[nombre_chat]        
             st.rerun()
     
-    if st.button("Guardar chat"):
-           #. Checamos si la lista de mensajes no esta vacia
-           if len(st.session_state.messages) > 0:
-               
-               # 2. Abrimis (o Ceramos) el archivo en modo escriturea('w')
-               with open("chats_guardados.json", "w") as archivo:
-                   
-                   # 3. Metemos la lista de mensajes dentro del archivo
-                   json.dump(st.session_state.messages, archivo)
-                   
-                   st.success("!Chat guardados con , éxito!")
-           else:
-               st.warning("Aun no hay mensajes para guardar.")
     
     st.caption("Santi AI ⚡")    
     
