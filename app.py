@@ -1,5 +1,6 @@
 import streamlit as st
 from groq import Groq
+import json
 
 # =========================================================
 # CONFIGURACIÓN
@@ -351,8 +352,27 @@ with st.sidebar:
         if st.button(f"🗑️ Borrar {nombre_chat}"):
             del st.session_state.chats[nombre_chat]        
             st.rerun()
-        
-    st.caption("Santi AI ⚡")
+    st.caption("Santi AI ⚡")    
+    
+    
+    if st.button("Guardar chat"):
+       #. Checamos si la lista de mensajes no esta vacia
+       if len(st.session_state_massages) > 0:
+           
+           # 2. Abrimis (o Ceramos) el archivo en modo escriturea('w')
+           with open("chats_guardados.json", "w") as archivo:
+               
+               # 3. Metemos la lista de mensajes dentro del archivo
+               json.dump(st.session_state.messages, archivo)
+               
+               st.success("!Chat guardados con , éxito!")
+       else:
+           st.warning("Aun no hay mensajes para guardar.")
+    
+    
+    
+    
+
 
 # =========================================================
 # SUGERENCIAS
