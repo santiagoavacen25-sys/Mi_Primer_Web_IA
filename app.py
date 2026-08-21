@@ -1,17 +1,5 @@
-import json
-import os
 import streamlit as st
 from groq import Groq
-
-# =========================================================
-# CARGA AUTOMÁTICA DEL HISTORIAL AL INICIAR
-# =========================================================
-if "messages" not in st.session_state:
-    if os.path.exists("chats_guardados.json"):
-        with open("chats_guardados.json", "r") as archivo:
-            st.session_state.messages = json.load(archivo)
-    else:
-        st.session_state.messages = []
 
 # =========================================================
 # CONFIGURACIÓN DE PÁGINA
@@ -94,6 +82,11 @@ div[data-testid="stImage"] img:hover {
     }
 }
 
+.hero {
+    text-align: center;
+    padding: 35px 20px 25px 20px;
+}
+
 .glass {
     background: rgba(255,255,255,0.055);
     border: 1px solid rgba(255,255,255,0.10);
@@ -152,7 +145,7 @@ div[data-testid="stImage"] img:hover {
 st.image("Logo.jpeg", use_container_width=False)
 
 # =========================================================
-# CONEXIÓN A GROQ
+# GROQ
 # =========================================================
 try:
     api_key = st.secrets["GROQ_API_KEY"]
@@ -163,9 +156,11 @@ except Exception:
 # =========================================================
 # SESSION STATE
 # =========================================================
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 if "model" not in st.session_state:
-    st.session_state.model = "llama-3.1-8b-instant"
+    st.session_state.model = "llama3-8b-8192"
 
 # =========================================================
 # COMPROBAR API
@@ -216,17 +211,8 @@ with st.sidebar:
     st.title("⚙️ Configuración")
     st.divider()
 
-    # Selector de modelo directo
-    st.session_state.model = st.selectbox(
-        "Modelo de IA",
-        ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"],
-        index=0
-    )
-
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
-        if os.path.exists("chats_guardados.json"):
-            os.remove("chats_guardados.json")
         st.rerun()
 
     st.divider()
@@ -276,7 +262,7 @@ o prácticamente cualquier tema.
             st.rerun()
 
 # =========================================================
-# HISTORIAL EN PANTALLA
+# HISTORIAL
 # =========================================================
 for message in st.session_state.messages:
     with st.chat_message(
@@ -286,7 +272,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # =========================================================
-# CHAT Y RESPUESTA DE LA IA
+# CHAT
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
@@ -305,7 +291,39 @@ if pregunta:
                 mensajes = [
                     {
                         "role": "system",
-                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
+                        "content": """
+Eres Santi AI, un asistente amigable,
+claro y útil.
+
+Responde en español salvo que
+el usuario pida otro idioma.
+
+Explica las cosas de forma sencilla
+cuando el usuario sea principiante.
+
+Si el usuario pregunta programación:
+
+- explica paso a paso
+- proporciona código funcional
+- explica los errores
+- evita complicar innecesariamente
+  las soluciones
+
+Si el usuario pide código:
+
+- entrega código completo cuando
+  sea necesario
+- usa bloques de código
+- explica dónde debe colocarlo
+
+No inventes información.
+
+Si no sabes algo,
+dilo claramente.
+
+Sé directo y evita respuestas
+innecesariamente largas.
+"""
                     }
                 ]
                 mensajes.extend(st.session_state.messages)
@@ -320,15 +338,10 @@ if pregunta:
                 texto = respuesta.choices[0].message.content
                 st.markdown(texto)
 
-                # Guardar respuesta en la sesión
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": texto
                 })
-
-                # GUARDADO AUTOMÁTICO EN EL ARCHIVO JSON
-                with open("chats_guardados.json", "w") as archivo:
-                    json.dump(st.session_state.messages, archivo)
 
         except Exception as e:
             st.error("❌ Ocurrió un error al conectar con la IA.")
