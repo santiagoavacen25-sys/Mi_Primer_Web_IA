@@ -1,15 +1,11 @@
 import json
 import os
-import groq
 import streamlit as st
-# Carga automática del historial al abrir la app
-if "messages" not in st.session_state:
-    if os.path.exists("chats_guardados.json"):
-        with open("chats_guardados.json", "r") as archivo:
-            st.session_state.messages = json.load(archivo)
-    else:
-        st.session_state.messages = []
-# 1. Cargar el historial automáticamente al abrir la app
+from groq import Groq
+
+# =========================================================
+# CARGA AUTOMÁTICA DEL HISTORIAL AL INICIAR
+# =========================================================
 if "messages" not in st.session_state:
     if os.path.exists("chats_guardados.json"):
         with open("chats_guardados.json", "r") as archivo:
@@ -18,26 +14,19 @@ if "messages" not in st.session_state:
         st.session_state.messages = []
 
 # =========================================================
-# CONFIGURACIÓN
+# CONFIGURACIÓN DE PÁGINA
 # =========================================================
-
 st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # =========================================================
-# ESTILOS CSS (CORREGIDOS Y SIN DUPLICADOS)
+# ESTILOS CSS
 # =========================================================
-
 st.markdown("""
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-/* =========================================================
-   ESTILOS GENERALES Y MARGEN SUPERIOR (PC)
-   ========================================================= */
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
@@ -51,34 +40,21 @@ html, body, [class*="css"] {
     color: white;
 }
 
-/* Espacio superior en PC para que NADA se corte arriba */
 .block-container {
     padding-top: 7rem !important; 
     padding-bottom: 2rem;
     max-width: 1100px;
 }
 
-    /* Seleccionas la barra lateral */
-
-    section[data-testid="stSidebar"] {
-        background-color: rgba(18 , 20, 26, 0.2) !important;
-        backdrop-filter: blur(12px) !important;
-            
-    }
- 
-/* Hacer transparente la barra superior de Streamlit */
+section[data-testid="stSidebar"] {
+    background-color: rgba(18 , 20, 26, 0.2) !important;
+    backdrop-filter: blur(12px) !important;
+}
 
 header[data-testid="stHeader"]{
     background: transparent !important;
-    background-color: rgba(18, 20, 26 0.2) !important;    
-    
+    background-color: rgba(18, 20, 26, 0.2) !important;    
 }
-
-
-
-/* =========================================================
-   LOGO CENTRADO Y ADAPTABLE
-   ========================================================= */
 
 div[data-testid="stImage"] {
     display: flex !important;
@@ -108,7 +84,6 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
-/* REGLAS EXCLUSIVAS PARA CELULARES */
 @media (max-width: 768px) {
     .block-container {
         padding-top: 2rem !important;
@@ -119,46 +94,6 @@ div[data-testid="stImage"] img:hover {
     }
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.hero {
-    text-align: center;
-    padding: 35px 20px 25px 20px;
-}
-
-.logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 70px;
-    height: 70px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    font-size: 34px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-.hero h1 {
-    font-size: 42px;
-    margin: 18px 0 8px 0;
-    font-weight: 800;
-    letter-spacing: -1.5px;
-}
-
-.hero p {
-    color: #aeb6cc;
-    font-size: 16px;
-}
-
-/* =========================================================
-   TARJETAS
-   ========================================================= */
-
 .glass {
     background: rgba(255,255,255,0.055);
     border: 1px solid rgba(255,255,255,0.10);
@@ -168,10 +103,6 @@ div[data-testid="stImage"] img:hover {
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 15px 50px rgba(0,0,0,0.18);
 }
-
-/* =========================================================
-   BOTONES
-   ========================================================= */
 
 .stButton > button {
     width: 100%;
@@ -190,10 +121,6 @@ div[data-testid="stImage"] img:hover {
     transform: translateY(-1px);
 }
 
-/* =========================================================
-   CHAT
-   ========================================================= */
-
 [data-testid="stChatMessage"] {
     background: rgba(255,255,255,0.045);
     border: 1px solid rgba(255,255,255,0.07);
@@ -201,27 +128,9 @@ div[data-testid="stImage"] img:hover {
     margin-bottom: 10px;
 }
 
-/* =========================================================
-   INPUT
-   ========================================================= */
-
 [data-testid="stChatInput"] {
     border-radius: 18px;
 }
-
-/* =========================================================
-   SELECT
-   ========================================================= */
-
-div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 14px;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
 
 .footer {
     text-align: center;
@@ -234,71 +143,43 @@ div[data-baseweb="select"] > div {
     color: #8e96aa;
     font-size: 13px;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
 # LOGO Y CABECERA
 # =========================================================
-
 st.image("Logo.jpeg", use_container_width=False)
 
 # =========================================================
-# GROQ
+# CONEXIÓN A GROQ
 # =========================================================
-
 try:
     api_key = st.secrets["GROQ_API_KEY"]
-
-    client = Groq(
-        api_key=api_key
-    )
-
+    client = Groq(api_key=api_key)
 except Exception:
     client = None
-
 
 # =========================================================
 # SESSION STATE
 # =========================================================
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
 if "model" not in st.session_state:
-    st.session_state.model = "openai/gpt-oss-120b"
-    
-if "chats" not in st.session_state:
-    st.session_state.chats = {} 
-
+    st.session_state.model = "llama-3.1-8b-instant"
 
 # =========================================================
 # COMPROBAR API
 # =========================================================
-
 if client is None:
-
-    st.error(
-        "⚠️ La IA todavía no está configurada."
-    )
-
-    st.info(
-        "Configura GROQ_API_KEY en los Secrets de Streamlit."
-    )
-
+    st.error("⚠️ La IA todavía no está configurada.")
+    st.info("Configura GROQ_API_KEY en los Secrets de Streamlit.")
     st.stop()
-
 
 # =========================================================
 # PANEL PRINCIPAL
 # =========================================================
-
 col1, col2, col3 = st.columns(3)
 
-
 with col1:
-
     st.markdown("""
 <div class="glass">
 <div style="font-size:28px;">🤖</div>
@@ -307,9 +188,7 @@ with col1:
 </div>
 """, unsafe_allow_html=True)
 
-
 with col2:
-
     st.markdown("""
 <div class="glass">
 <div style="font-size:28px;">💻</div>
@@ -318,9 +197,7 @@ with col2:
 </div>
 """, unsafe_allow_html=True)
 
-
 with col3:
-
     st.markdown("""
 <div class="glass">
 <div style="font-size:28px;">📚</div>
@@ -329,33 +206,15 @@ with col3:
 </div>
 """, unsafe_allow_html=True)
 
-
 st.write("")
-
 
 # =========================================================
 # SIDEBAR
 # =========================================================
-
-# Entrada de texto del usuario
-if prompt := st.chat_input("Escribe tu pregunta para Santi IA..."):
-    
-    # 1. Muestras y guardas el mensaje del usuario
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    # 2. Generas y guardas la respuesta de la IA
-    # (Aquí va tu llamada a Groq / respuesta)
-    st.session_state.messages.append({"role": "assistant", "content": respuesta_ia})
-
-    # 3. Guardado automático en segundo plano al terminar de responder
-    with open("chats_guardados.json", "w") as archivo:
-        json.dump(st.session_state.messages, archivo)
-
 with st.sidebar:
     st.title("⚙️ Configuración")
     st.divider()
 
-    # BOTÓN PARA NUEVO CHAT (Limpia pantalla y borra el archivo)
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
         if os.path.exists("chats_guardados.json"):
@@ -368,9 +227,7 @@ with st.sidebar:
 # =========================================================
 # SUGERENCIAS
 # =========================================================
-
 if len(st.session_state.messages) == 0:
-
     st.markdown("""
 <div class="glass">
 <h3>👋 ¿Qué quieres hacer?</h3>
@@ -384,140 +241,66 @@ o prácticamente cualquier tema.
 """, unsafe_allow_html=True)
 
     st.write("")
-
     a, b, c = st.columns(3)
 
     with a:
-
         if st.button("🐍 Enséñame Python"):
-
             st.session_state.messages.append({
                 "role": "user",
                 "content": "Enséñame Python desde cero con un ejercicio sencillo."
             })
-
             st.rerun()
 
     with b:
-
         if st.button("💻 Dame un proyecto"):
-
             st.session_state.messages.append({
                 "role": "user",
                 "content": "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
             })
-
             st.rerun()
 
     with c:
-
         if st.button("🚀 Explícame IA"):
-
             st.session_state.messages.append({
                 "role": "user",
                 "content": "Explícame qué es la inteligencia artificial de forma sencilla."
             })
-
             st.rerun()
 
-
 # =========================================================
-# HISTORIAL
+# HISTORIAL EN PANTALLA
 # =========================================================
-
 for message in st.session_state.messages:
-
     with st.chat_message(
         message["role"],
         avatar="🧑" if message["role"] == "user" else "⚡"
     ):
-
-        st.markdown(
-            message["content"]
-        )
-
+        st.markdown(message["content"])
 
 # =========================================================
-# CHAT
+# CHAT Y RESPUESTA DE LA IA
 # =========================================================
-
-pregunta = st.chat_input(
-    "Escribe tu pregunta para Santi IA..."
-)
+pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
 if pregunta:
-
-    # =====================================================
-    # MENSAJE DEL USUARIO
-    # =====================================================
-
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
     })
 
-    with st.chat_message(
-        "user",
-        avatar="🧑"
-    ):
-
+    with st.chat_message("user", avatar="🧑"):
         st.markdown(pregunta)
 
-    # =====================================================
-    # RESPUESTA DE LA IA
-    # =====================================================
-
-    with st.chat_message(
-        "assistant",
-        avatar="⚡"
-    ):
-
+    with st.chat_message("assistant", avatar="⚡"):
         try:
-
             with st.spinner("Pensando..."):
-
                 mensajes = [
                     {
                         "role": "system",
-                        "content": """
-Eres Santi AI, un asistente amigable,
-claro y útil.
-
-Responde en español salvo que
-el usuario pida otro idioma.
-
-Explica las cosas de forma sencilla
-cuando el usuario sea principiante.
-
-Si el usuario pregunta programación:
-
-- explica paso a paso
-- proporciona código funcional
-- explica los errores
-- evita complicar innecesariamente
-  las soluciones
-
-Si el usuario pide código:
-
-- entrega código completo cuando
-  sea necesario
-- usa bloques de código
-- explica dónde debe colocarlo
-
-No inventes información.
-
-Si no sabes algo,
-dilo claramente.
-
-Sé directo y evita respuestas
-innecesariamente largas.
-"""
+                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
                     }
                 ]
-
-                mensajes.extend(
-                    st.session_state.messages
-                )
+                mensajes.extend(st.session_state.messages)
 
                 respuesta = client.chat.completions.create(
                     model=st.session_state.model,
@@ -527,33 +310,25 @@ innecesariamente largas.
                 )
 
                 texto = respuesta.choices[0].message.content
-
                 st.markdown(texto)
 
-                # =========================================
-                # GUARDAR RESPUESTA
-                # =========================================
-
+                # Guardar respuesta en la sesión
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": texto
                 })
 
+                # GUARDADO AUTOMÁTICO EN EL ARCHIVO JSON
+                with open("chats_guardados.json", "w") as archivo:
+                    json.dump(st.session_state.messages, archivo)
+
         except Exception as e:
-
-            st.error(
-                "❌ Ocurrió un error al conectar con la IA."
-            )
-
-            st.code(
-                str(e)
-            )
-
+            st.error("❌ Ocurrió un error al conectar con la IA.")
+            st.code(str(e))
 
 # =========================================================
 # FOOTER
 # =========================================================
-
 st.markdown("""
 <div class="footer">
 Santi IA ⚡ · Python + Streamlit + Groq
