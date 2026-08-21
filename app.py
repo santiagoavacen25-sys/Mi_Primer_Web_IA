@@ -265,33 +265,6 @@ o prácticamente cualquier tema.
 </div>
 """, unsafe_allow_html=True)
 
-    st.write("")
-    a, b, c = st.columns(3)
-
-    with a:
-        if st.button("🐍 Enséñame Python"):
-            st.session_state.messages.append({
-                "role": "user",
-                "content": "Enséñame Python desde cero con un ejercicio sencillo."
-            })
-            st.rerun()
-
-    with b:
-        if st.button("💻 Dame un proyecto"):
-            st.session_state.messages.append({
-                "role": "user",
-                "content": "Dame una idea de proyecto de programación que pueda hacer siendo principiante."
-            })
-            st.rerun()
-
-    with c:
-        if st.button("🚀 Explícame IA"):
-            st.session_state.messages.append({
-                "role": "user",
-                "content": "Explícame qué es la inteligencia artificial de forma sencilla."
-            })
-            st.rerun()
-
 # =========================================================
 # MOSTRAR MENSAJES EN PANTALLA
 # =========================================================
