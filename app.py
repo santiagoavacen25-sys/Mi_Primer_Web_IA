@@ -331,18 +331,6 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-    # 2. BOTÓN PARA GUARDAR
-    if st.button("💾 Guardar chat"):
-        if len(st.session_state.messages) > 0:
-            num = len(st.session_state.chats) + 1
-            st.session_state.chats[f"Chat {num}"] = st.session_state.messages.copy()
-            st.success(f"Guardado como Chat {num}")
-        else:
-            st.warning("No hay nada que guardar.")
-
-    st.divider()
-    st.subheader("Mis Chats Guardados")
-
     # BUCLE FOR PARA MOSTRAR Y ELIMINAR CHATS
     for nombre_chat in list(st.session_state.chats):
    
