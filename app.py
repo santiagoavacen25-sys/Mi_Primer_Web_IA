@@ -15,11 +15,11 @@ st.set_page_config(
 # =========================================================
 
 # Las 3 columnas para centrar la imagen en la pantalla 
-col1, col2, col3 = st.columns([1, 4, 1])
+
+col1, col2, col3 = st.columns([1, 1, 1])
 with col2:
     st.image("Logo.jpeg", use_container_width=False)
-
-
+    
 # =========================================================
 # ESTILOS
 # =========================================================
@@ -30,9 +30,27 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* =========================================================
-   LOGO Y HOVER DE IMAGEN
+   LOGO CENTRADO Y CON MARGEN SUPERIOR
    ========================================================= */
 
+/* Contenedor principal de la imagen centrado */
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 35px !important;    /* Espacio para que no sobresalga arriba */
+    margin-bottom: 20px !important;
+}
+
+/* Elemento contenedor interno */
+div[data-testid="stImage"] > div {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Estilo de la tarjeta de la imagen */
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
@@ -42,7 +60,8 @@ div[data-testid="stImage"] img {
     transition: all 0.3s ease !important;
     display: block !important;
     margin: 0 auto !important;
-    max-width: 220px !important;
+    max-width: 200px !important;    /* Tamaño equilibrado */
+    width: 100% !important;
 }
 
 div[data-testid="stImage"] img:hover {
@@ -67,7 +86,7 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    padding-top: 2rem;
+    padding-top: 1rem !important;
     padding-bottom: 2rem;
     max-width: 1100px;
 }
