@@ -3,7 +3,16 @@ import os
 import time
 import streamlit as st
 from groq import Groq
-import streamlit as st
+
+# =========================================================
+# CONFIGURACIÓN DE PÁGINA (Solo debe ejecutarse UNA vez)
+# =========================================================
+st.set_page_config(
+    page_title="Santi AI Mobile",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="collapsed"  # En celular inicia cerrada para comodidad
+)
 
 # =========================================================
 # ARCHIVO DE HISTORIAL
@@ -24,74 +33,85 @@ def guardar_todos_los_chats(chats):
         json.dump(chats, f, ensure_ascii=False, indent=2)
 
 # =========================================================
-# CONFIGURACIÓN DE PÁGINA
+# ESTILOS CSS (Logo personalizado + Optimización Móvil)
 # =========================================================
-st.set_page_config(
-    page_title="Santi AI",
-    page_icon="⚡",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-st.set_page_config(
-    page_title="Santi AI Mobile",
-    page_icon="📱",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
-
-# =========================================================
-# ESTILOS CSS
-# =========================================================
-
-
-# Coloca aquí el enlace a la imagen de tu logo
-URL_MI_LOGO = "https://i.imgur.com/v04Xk4J.png"  # Reemplaza por la URL directa de tu logo
+URL_MI_LOGO = "https://i.imgur.com/v04Xk4J.png"  # Cambia esta URL por la directa de tu logo
 
 st.markdown(f"""
     <style>
-    /* 1. Ocultamos el ícono de la flecha original (SVG) */
-    button[data-testid="stSidebarCollapseButton"] svg {{
-        display: none !important;
-    }}
-    
+    /* --------------------------------------------------
+       1. REEMPLAZO DE FLECHA DE BARRA LATERAL POR TU LOGO
+       -------------------------------------------------- */
+    button[data-testid="stSidebarCollapseButton"] svg,
     button[data-testid="stHeaderCollapsedControl"] svg {{
         display: none !important;
     }}
 
-    /* 2. Insertamos la imagen de tu logo en el botón de la barra lateral desplegada */
     button[data-testid="stSidebarCollapseButton"] {{
         background-image: url("{URL_MI_LOGO}") !important;
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
-        width: 42px !important;
-        height: 42px !important;
+        width: 40px !important;
+        height: 40px !important;
         border: none !important;
     }}
 
-    /* 3. Insertamos la imagen de tu logo en el botón cuando la barra está colapsada (cerrada) */
     button[data-testid="stHeaderCollapsedControl"] {{
         background-image: url("{URL_MI_LOGO}") !important;
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
-        width: 42px !important;
-        height: 42px !important;
+        width: 40px !important;
+        height: 40px !important;
         border: none !important;
-        margin-left: 10px !important;
-        margin-top: 5px !important;
+        margin-left: 8px !important;
+        margin-top: 4px !important;
     }}
 
-    /* 4. Efecto visual suave al presionar con el dedo en celular */
     button[data-testid="stHeaderCollapsedControl"]:active, 
     button[data-testid="stSidebarCollapseButton"]:active {{
         transform: scale(0.92);
         transition: transform 0.1s ease;
     }}
+
+    /* --------------------------------------------------
+       2. OPTIMIZACIÓN TÁCTIL / MOBILE-FIRST
+       -------------------------------------------------- */
+    /* Relleno cómodo en pantallas chicas */
+    .block-container {{
+        padding-top: 1.5rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+    }}
+
+    /* Botones grandes y fáciles de tocar con el pulgar */
+    .stButton > button {{
+        width: 100% !important;
+        height: 3.2rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+    }}
+
+    /* Evita que los iPhone / Android hagan zoom al tocar para escribir */
+    .stTextInput input, .stTextArea textarea {{
+        font-size: 16px !important;
+        border-radius: 10px !important;
+    }}
+
+    /* Ajuste del sidebar en celular para que no ocupe todo el ancho */
+    @media (max-width: 768px) {{
+        section[data-testid="stSidebar"] {{
+            width: 82vw !important;
+        }}
+        header {{
+            background: transparent !important;
+        }}
+    }}
     </style>
 """, unsafe_allow_html=True)
-
 # =========================================================
 # GROQ CONEXIÓN
 # =========================================================
