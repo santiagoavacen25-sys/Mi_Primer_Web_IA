@@ -1,6 +1,6 @@
 import json
 import os
-from groq import Groq
+import Groq
 import streamlit as st
 # Carga automática del historial al abrir la app
 if "messages" not in st.session_state:
@@ -336,6 +336,20 @@ st.write("")
 # =========================================================
 # SIDEBAR
 # =========================================================
+
+# Entrada de texto del usuario
+if prompt := st.chat_input("Escribe tu pregunta para Santi IA..."):
+    
+    # 1. Muestras y guardas el mensaje del usuario
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # 2. Generas y guardas la respuesta de la IA
+    # (Aquí va tu llamada a Groq / respuesta)
+    st.session_state.messages.append({"role": "assistant", "content": respuesta_ia})
+
+    # 3. Guardado automático en segundo plano al terminar de responder
+    with open("chats_guardados.json", "w") as archivo:
+        json.dump(st.session_state.messages, archivo)
 
 with st.sidebar:
     st.title("⚙️ Configuración")
