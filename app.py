@@ -54,7 +54,7 @@ section[data-testid="stSidebar"] {
 
 header[data-testid="stHeader"]{
     background: transparent !important;
-    background-color: rgba(0, 0, 0.2) !important;    
+    background-color: rgba(18, 20, 26, 0.2) !important;    
     
 }
 
