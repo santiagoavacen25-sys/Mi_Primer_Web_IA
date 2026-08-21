@@ -45,8 +45,8 @@ html, body, [class*="css"] {
 /* Seleccionas la barra lateral */
 
 section[data-testid="stSidebar"] {
-    background-color: rgba(18 , 20, 26, 0.2 !important;
-    backdrop-fileter: blur(12px) !important;
+    background-color: rgba(18 , 20, 26, 0.2) !important;
+    backdrop-filter: blur(12px) !important;
         
 }
  
