@@ -357,7 +357,7 @@ with st.sidebar:
     
     if st.button("Guardar chat"):
        #. Checamos si la lista de mensajes no esta vacia
-       if len(st.session_stat.messages) > 0:
+       if len(st.session_state.messages) > 0:
            
            # 2. Abrimis (o Ceramos) el archivo en modo escriturea('w')
            with open("chats_guardados.json", "w") as archivo:
