@@ -1,6 +1,7 @@
 import streamlit as st
 from groq import Groq
 import json
+import os
 
 # =========================================================
 # CONFIGURACIÓN
@@ -334,12 +335,12 @@ with st.sidebar:
     st.divider()
     st.subheader("Mis Chats Guardados")
 
-    # 2. CARGAR Y BORRAR CHATS
-    for nombre_chat in list(st.session_state.chats):
-        if st.button(f"🗑️ Borrar {nombre_chat}"):
-            del st.session_state.chats[nombre_chat]        
-            st.rerun()
-
+    # 2. MOSTRAR Y CARGAR EL CHAT GUARDADO
+    if os.path.exists("chats_guardados.json"):
+        if st.button("💬 Cargar Chat Guardado ⚡"):
+            with open(chats_guardados.jbs, "r") as atchivo:
+                st.session_state.messages = json.load(archivo)
+                st.rerun() 
     st.caption("Santi AI ⚡")
         
 
