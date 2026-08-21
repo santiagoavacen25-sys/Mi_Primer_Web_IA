@@ -165,8 +165,7 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if "model" not in st.session_state:
-    st.session_state.model = "llama3-8b-8192"
+st.session_state.model = "llama-3.1-8b-instant"
 
 # =========================================================
 # LOGO Y CABECERA
