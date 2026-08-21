@@ -15,10 +15,10 @@ st.set_page_config(
 # =========================================================
 
 # Las 3 columnas para centrar la imagen en la pantalla 
+# Las 3 columnas para centrar la imagen en la pantalla 
 col1, col2, col3 = st.columns([1, 4, 1])
 with col2:
     st.image("Logo.jpeg", use_container_width=False)
-
 
 # =========================================================
 # ESTILOS
