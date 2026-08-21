@@ -169,7 +169,7 @@ except Exception:
 # SESSION STATE
 # =========================================================
 if "model" not in st.session_state:
-    st.session_state.model = "llama-3.1-8b-instant"
+    st.session_state.model = "llama3-70b-8192"
     
 if "chats" not in st.session_state:
     st.session_state.chats = {} 
