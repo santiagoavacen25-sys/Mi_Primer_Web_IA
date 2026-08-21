@@ -1,6 +1,6 @@
 import json
 import os
-import Groq
+import groq
 import streamlit as st
 # Carga automática del historial al abrir la app
 if "messages" not in st.session_state:
