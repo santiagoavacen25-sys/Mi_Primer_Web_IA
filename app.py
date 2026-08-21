@@ -11,17 +11,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# LOGO Y CABECERA
-# =========================================================
-
-# Las 3 columnas para centrar la imagen en la pantalla 
-
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
- st.image("Logo.jpeg", use_container_width=False)
-    
-# =========================================================
-# ESTILOS
+# ESTILOS CSS (CORREGIDOS Y SIN DUPLICADOS)
 # =========================================================
 
 st.markdown("""
@@ -30,66 +20,7 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* =========================================================
-   LOGO CENTRADO Y CON MARGEN SUPERIOR
-   ========================================================= */
-
-/* =========================================================
-   LOGO Y ESPACIADO SUPERIOR (PC VS MÓVIL)
-   ========================================================= */
-
-/* Aumentamos la distancia del lienzo en la parte superior */
-.block-container {
-    padding-top: 6rem !important; /* Empuja todo el contenido hacia abajo en PC */
-    padding-bottom: 2rem;
-    max-width: 1100px;
-}
-
-/* Centrado del contenedor de la imagen */
-div[data-testid="stImage"] {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin-top: 20px !important;
-    margin-bottom: 30px !important;
-}
-
-/* Estilo de la tarjeta */
-div[data-testid="stImage"] img {
-    background: rgba(20, 20, 35, 0.6) !important;
-    border-radius: 24px !important;
-    padding: 15px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
-    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
-    transition: all 0.3s ease !important;
-    object-fit: contain !important;
-    max-width: 200px !important;
-    width: 100% !important;
-    height: auto !important;
-    display: block !important;
-    margin: 0 auto !important;
-}
-
-div[data-testid="stImage"] img:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
-}
-
-/* REGLAS EXCLUSIVAS PARA CELULARES (Mantiene cómo está ahora) */
-@media (max-width: 768px) {
-    .block-container {
-        padding-top: 2rem !important; /* Mantiene la posición buena en el celular */
-    }
-    div[data-testid="stImage"] {
-        margin-top: 0px !important;
-    }
-    div[data-testid="stImage"] img {
-        max-width: 150px !important;
-        padding: 10px !important;
-    }
-}
-/* =========================================================
-   ESTILOS GENERALES
+   ESTILOS GENERALES Y MARGEN SUPERIOR (PC)
    ========================================================= */
 
 html, body, [class*="css"] {
@@ -104,10 +35,54 @@ html, body, [class*="css"] {
     color: white;
 }
 
+/* Espacio superior en PC para que NADA se corte arriba */
 .block-container {
-    padding-top: 1rem !important;
+    padding-top: 7rem !important; 
     padding-bottom: 2rem;
     max-width: 1100px;
+}
+
+/* =========================================================
+   LOGO CENTRADO Y ADAPTABLE
+   ========================================================= */
+
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 25px !important;
+}
+
+div[data-testid="stImage"] img {
+    background: rgba(20, 20, 35, 0.6) !important;
+    border-radius: 24px !important;
+    padding: 15px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    object-fit: contain !important;
+    max-width: 210px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+div[data-testid="stImage"] img:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
+}
+
+/* REGLAS EXCLUSIVAS PARA CELULARES */
+@media (max-width: 768px) {
+    .block-container {
+        padding-top: 2rem !important;
+    }
+    div[data-testid="stImage"] img {
+        max-width: 150px !important;
+        padding: 10px !important;
+    }
 }
 
 /* =========================================================
@@ -229,6 +204,11 @@ div[data-baseweb="select"] > div {
 </style>
 """, unsafe_allow_html=True)
 
+# =========================================================
+# LOGO Y CABECERA
+# =========================================================
+
+st.image("Logo.jpeg", use_container_width=False)
 
 # =========================================================
 # GROQ
