@@ -14,16 +14,54 @@ st.set_page_config(
 # LOGO Y CABECERA
 # =========================================================
 
-
-# Definimos las 3 columnas sin repetir variables
-col1, col2, col3 = st.columns([1, 4, 1])
-
-with col2:
-    st.markdown('<div class="tarjeta-logo">', unsafe_allow_html= True)
-    st.image("Logo.jpeg" , use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+# Inyectamos el CSS para controlar el tamaño y estilo de la imagen
         
+st.markdown("""
+    <style>
+    /* Contenedor principal */
+    .tarjeta-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+    
+    /* Estilo base de la imagen */
+    .tarjeta-logo img {
+        max-width: 220px !important;            /* Tamaño visible del logo */
+        border-radius: 50% !important;           /* Recorte totalmente circular */
+        object-fit: cover;
+        
+        /* Brillo suave por defecto en estado normal */
+        box-shadow: 0 0 20px rgba(0, 243, 255, 0.3) !important;
+        
+        /* Transición suave para la animación (0.4 segundos) */
+        transition: transform 0.4s ease, box-shadow 0.4s ease !important;
+        cursor: pointer;
+    }
 
+    /* EFECTO HOVER: Se activa al pasar el mouse encima */
+    .tarjeta-logo img:hover {
+        /* Se agranda un poco y sube un poco */
+        transform: scale(1.05) translateY(-5px) !important;
+        
+        /* Resplandor neón doble (Cian + Rosa/Morado) como en tu imagen */
+        box-shadow: 
+            -10px 0 30px #00f3ff, 
+            10px 0 30px #ff00ff,
+            0 0 50px rgba(0, 243, 255, 0.8) !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+ 
+ #Las 3 columnas para centrar la imaguen en la pantalla 
+ 
+col1, col2, col3 = st.columns([1,4,1])
+with col2:
+    st.markdown('<div class="tarjeta-logo">', unsafe_allow_html=True)
+    st.image("Logo.jpeg", use_conteiner_width=False)
+    st.markdown('</div>', unsafe_allow_html=True)
+                       
 
 # =========================================================
 # ESTILOS
