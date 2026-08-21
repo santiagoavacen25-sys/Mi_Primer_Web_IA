@@ -33,24 +33,28 @@ st.markdown("""
    LOGO CENTRADO Y CON MARGEN SUPERIOR
    ========================================================= */
 
-/* Contenedor principal de la imagen centrado */
+/* =========================================================
+   LOGO Y ESPACIADO SUPERIOR (PC VS MÓVIL)
+   ========================================================= */
+
+/* Aumentamos la distancia del lienzo en la parte superior */
+.block-container {
+    padding-top: 6rem !important; /* Empuja todo el contenido hacia abajo en PC */
+    padding-bottom: 2rem;
+    max-width: 1100px;
+}
+
+/* Centrado del contenedor de la imagen */
 div[data-testid="stImage"] {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
-    margin-top: 35px !important;    /* Espacio para que no sobresalga arriba */
-    margin-bottom: 20px !important;
+    margin-top: 20px !important;
+    margin-bottom: 30px !important;
 }
 
-/* Elemento contenedor interno */
-div[data-testid="stImage"] > div {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-}
-
-/* Estilo de la tarjeta de la imagen */
+/* Estilo de la tarjeta */
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
@@ -58,10 +62,12 @@ div[data-testid="stImage"] img {
     border: 1px solid rgba(140, 80, 255, 0.3) !important;
     box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
     transition: all 0.3s ease !important;
+    object-fit: contain !important;
+    max-width: 200px !important;
+    width: 100% !important;
+    height: auto !important;
     display: block !important;
     margin: 0 auto !important;
-    max-width: 200px !important;    /* Tamaño equilibrado */
-    width: 100% !important;
 }
 
 div[data-testid="stImage"] img:hover {
@@ -69,6 +75,19 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
+/* REGLAS EXCLUSIVAS PARA CELULARES (Mantiene cómo está ahora) */
+@media (max-width: 768px) {
+    .block-container {
+        padding-top: 2rem !important; /* Mantiene la posición buena en el celular */
+    }
+    div[data-testid="stImage"] {
+        margin-top: 0px !important;
+    }
+    div[data-testid="stImage"] img {
+        max-width: 150px !important;
+        padding: 10px !important;
+    }
+}
 /* =========================================================
    ESTILOS GENERALES
    ========================================================= */
