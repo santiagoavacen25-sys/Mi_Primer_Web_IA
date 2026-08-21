@@ -338,7 +338,7 @@ with st.sidebar:
     # 2. MOSTRAR Y CARGAR EL CHAT GUARDADO
     if os.path.exists("chats_guardados.json"):
         if st.button("💬 Cargar Chat Guardado ⚡"):
-            with open(chats_guardados.jbs, "r") as atchivo:
+            with open("chats_guardados.json", "r") as archivo:
                 st.session_state.messages = json.load(archivo)
                 st.rerun() 
     st.caption("Santi AI ⚡")
