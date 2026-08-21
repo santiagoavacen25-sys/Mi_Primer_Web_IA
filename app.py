@@ -347,6 +347,23 @@ with open("chats_guardados.json", "w") as archivo:
     json.dump(st.session_state.messages, archivo)
     
     st.caption("Santi AI ⚡")
+    
+    # Entrada de texto del usuario
+if prompt := st.chat_input("Escribe tu pregunta para Santi IA..."):
+    
+    # 1. Agregas y muestras el mensaje del usuario
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # 2. Aquí generas y muestras la respuesta de la IA (tu llamada a Groq)
+    respuesta_ia = "..." # Aquí va tu código donde responde la IA
+    st.session_state.messages.append({"role": "assistant", "content": respuesta_ia})
+
+    # -------------------------------------------------------------
+    # 👉 ¡AQUÍ PEGAS EL PASO 3! 👈
+    # Se ejecuta en milisegundos justo cuando la IA termina de responder
+    with open("chats_guardados.json", "w") as archivo:
+        json.dump(st.session_state.messages, archivo)
+    # -------------------------------------------------------------
         
 
 # =========================================================
