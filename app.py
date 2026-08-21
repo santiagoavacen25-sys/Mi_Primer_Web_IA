@@ -163,6 +163,7 @@ except Exception:
 # =========================================================
 # SESSION STATE
 # =========================================================
+
 if "model" not in st.session_state:
     st.session_state.model = "llama-3.1-8b-instant"
 
@@ -214,6 +215,13 @@ st.write("")
 with st.sidebar:
     st.title("⚙️ Configuración")
     st.divider()
+
+    # Selector de modelo directo
+    st.session_state.model = st.selectbox(
+        "Modelo de IA",
+        ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"],
+        index=0
+    )
 
     if st.button("➕ Nuevo chat"):
         st.session_state.messages = []
