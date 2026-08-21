@@ -46,11 +46,19 @@ html, body, [class*="css"] {
 
 /* Seleccionas la barra lateral */
 
-section[data-testid="stSidebar"] {
-    background-color: rgba(18 , 20, 26, 0.2) !important;
-    backdrop-filter: blur(12px) !important;
-        
-}
+with st.sidebar:
+    st.title("⚙️ Configuración")
+    st.divider()
+
+    # BOTÓN PARA NUEVO CHAT (Limpia pantalla y el archivo)
+    if st.button("➕ Nuevo chat"):
+        st.session_state.messages = []
+        if os.path.exists("chats_guardados.json"):
+            os.remove("chats_guardados.json")
+        st.rerun()
+
+    st.divider()
+    st.caption("Santi AI ⚡")
  
 /* Hacer transparente la barra superior de Streamlit */
 
@@ -332,6 +340,7 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
+    # 2. BOTÓN PARA CARG
     st.divider()
     st.subheader("Mis Chats Guardados")
 
