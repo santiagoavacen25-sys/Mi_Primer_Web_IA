@@ -1,5 +1,6 @@
 import json
 import os
+import time
 import streamlit as st
 from groq import Groq
 
@@ -165,7 +166,8 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-st.session_state.model = "llama-3.1-8b-instant"
+# MODELO ACTIVO EN GROQ (ACTUALIZADO)
+st.session_state.model = "openai/gpt-oss-20b"
 
 # =========================================================
 # LOGO Y CABECERA
@@ -194,15 +196,12 @@ with st.sidebar:
     st.divider()
     st.markdown("### 💬 Historial de Chats")
 
-    # Lista de chats en la barra lateral
     if todos_los_chats:
         for chat_id, chat_data in reversed(list(todos_los_chats.items())):
             titulo = chat_data.get("titulo", "Chat sin título")
-            # Recortar título si es muy largo
             if len(titulo) > 28:
                 titulo = titulo[:25] + "..."
             
-            # Resaltar si es el chat activo
             es_activo = (st.session_state.current_chat_id == chat_id)
             label = f"📌 {titulo}" if es_activo else f"💬 {titulo}"
             
@@ -309,17 +308,13 @@ for message in st.session_state.messages:
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
 if pregunta:
-    # Si es el primer mensaje de una nueva conversación, asignamos ID y título
     if st.session_state.current_chat_id is None:
-        import time
         st.session_state.current_chat_id = str(int(time.time()))
         titulo_chat = pregunta[:30] if len(pregunta) > 30 else pregunta
     else:
-        # Recuperar título previo si ya existe
         chat_actual = todos_los_chats.get(st.session_state.current_chat_id, {})
         titulo_chat = chat_actual.get("titulo", pregunta[:30])
 
-    # Agregar mensaje del usuario a la sesión
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
@@ -334,13 +329,7 @@ if pregunta:
                 mensajes = [
                     {
                         "role": "system",
-                        "content": """
-Eres Santi AI, un asistente amigable, claro y útil.
-Responde en español salvo que el usuario pida otro idioma.
-Explica las cosas de forma sencilla cuando el usuario sea principiante.
-Si el usuario pregunta programación: explica paso a paso, proporciona código funcional y explica los errores.
-Sé directo y evita respuestas innecesariamente largas.
-"""
+                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
                     }
                 ]
                 mensajes.extend(st.session_state.messages)
@@ -355,13 +344,11 @@ Sé directo y evita respuestas innecesariamente largas.
                 texto = respuesta.choices[0].message.content
                 st.markdown(texto)
 
-                # Agregar respuesta a la sesión
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": texto
                 })
 
-                # GUARDADO AUTOMÁTICO DE TODO EL CHAT EN DISCO
                 todos_los_chats[st.session_state.current_chat_id] = {
                     "titulo": titulo_chat,
                     "messages": st.session_state.messages
