@@ -1,7 +1,14 @@
-import streamlit as st
-from groq import Groq
 import json
 import os
+import streamlit as st
+
+# 1. Cargar el historial automáticamente al abrir la app
+if "messages" not in st.session_state:
+    if os.path.exists("chats_guardados.json"):
+        with open("chats_guardados.json", "r") as archivo:
+            st.session_state.messages = json.load(archivo)
+    else:
+        st.session_state.messages = []
 
 # =========================================================
 # CONFIGURACIÓN
