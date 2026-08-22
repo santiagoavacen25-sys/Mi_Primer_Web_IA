@@ -392,7 +392,7 @@ cuando el usuario sea principiante.
 
             # Solo enviamos los últimos 10 mensajes
             mensajes.extend(
-                st.session_state.messages[-10:]
+                st.session_state.messages[-6:]
             )
 
             # ==============================
@@ -403,7 +403,7 @@ cuando el usuario sea principiante.
                 model=st.session_state.model,
                 messages=mensajes,
                 temperature=0.7,
-                max_tokens=2048
+                max_tokens=1500
             )
 
             # ==============================
