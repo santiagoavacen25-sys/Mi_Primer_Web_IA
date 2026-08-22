@@ -33,21 +33,16 @@ st.set_page_config(
 )
 
 # =========================================================
-# ESTILOS CSS
+# ESTILOS CSS Y PARCHE JAVASCRIPT (ANTI-AUTO SCROLL)
 # =========================================================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* 1. DESACTIVAR EL DESPLAZAMIENTO AUTOMÁTICO (SCROLL ANCHORING) */
-html, body {
+html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     overflow-anchor: none !important;
     scroll-behavior: auto !important;
     font-family: 'Inter', sans-serif;
-}
-
-[data-testid="stAppViewContainer"] {
-    overflow-anchor: none !important;
 }
 
 .stApp {
@@ -153,13 +148,17 @@ div[data-testid="stImage"] img:hover {
     padding: 30px 0 10px 0;
 }
 
-/* Ajuste móvil */
 @media (max-width: 768px) {
     .stTextInput input, .stTextArea textarea {
         font-size: 16px !important;
     }
 }
 </style>
+
+<script>
+// Bloquea las llamadas automáticas de Streamlit para hacer scroll hacia abajo
+Element.prototype.scrollIntoView = function() {};
+</script>
 """, unsafe_allow_html=True)
 
 # =========================================================
