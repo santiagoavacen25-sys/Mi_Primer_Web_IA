@@ -167,10 +167,7 @@ button[data-testid="stHeaderCollapsedControl"] {
 /* BURBUJAS DE MENSAJES */
 div[data-testid="stChatMessage"] {
     background: rgba(255, 255, 255, 0.045) !important;
-    border: 1px solid rgba(255, 255, 255, 0.07) !important;
-    border-radius: 18px !important;
-    margin-bottom: 10px !important;
-}
+    border: 1px solid rgba(255, 255
 
 /* BURBUJAS DE LA IA CON EFECTO DE LUZ */
 div[data-testid="stChatMessage"]:nth-child(even) {
