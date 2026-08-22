@@ -5,6 +5,16 @@ import streamlit as st
 from groq import Groq
 
 # =========================================================
+# CONFIGURACIÓN DE PÁGINA (Solo debe ejecutarse UNA vez)
+# =========================================================
+st.set_page_config(
+    page_title="Santi AI Mobile",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="collapsed"  # En celular inicia cerrada para comodidad
+)
+
+# =========================================================
 # ARCHIVO DE HISTORIAL
 # =========================================================
 ARCHIVO_CHATS = "chats_guardados.json"
@@ -23,127 +33,84 @@ def guardar_todos_los_chats(chats):
         json.dump(chats, f, ensure_ascii=False, indent=2)
 
 # =========================================================
-# CONFIGURACIÓN DE PÁGINA
+# ESTILOS CSS (Logo personalizado + Optimización Móvil)
 # =========================================================
-st.set_page_config(
-    page_title="Santi AI",
-    page_icon="⚡",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+URL_MI_LOGO = "https://i.imgur.com/v04Xk4J.png"  # Cambia esta URL por la directa de tu logo
 
-# =========================================================
-# ESTILOS CSS
-# =========================================================
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+st.markdown(f"""
+    <style>
+    /* --------------------------------------------------
+       1. REEMPLAZO DE FLECHA DE BARRA LATERAL POR TU LOGO
+       -------------------------------------------------- */
+    button[data-testid="stSidebarCollapseButton"] svg,
+    button[data-testid="stHeaderCollapsedControl"] svg {{
+        display: none !important;
+    }}
 
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
+    button[data-testid="stSidebarCollapseButton"] {{
+        background-image: url("{URL_MI_LOGO}") !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        border: none !important;
+    }}
 
-.stApp {
-    background:
-        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
-        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
-    color: white;
-}
+    button[data-testid="stHeaderCollapsedControl"] {{
+        background-image: url("{URL_MI_LOGO}") !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        width: 40px !important;
+        height: 40px !important;
+        border: none !important;
+        margin-left: 8px !important;
+        margin-top: 4px !important;
+    }}
 
-.block-container {
-    padding-top: 5rem !important; 
-    padding-bottom: 2rem;
-    max-width: 1100px;
-}
+    button[data-testid="stHeaderCollapsedControl"]:active, 
+    button[data-testid="stSidebarCollapseButton"]:active {{
+        transform: scale(0.92);
+        transition: transform 0.1s ease;
+    }}
 
-section[data-testid="stSidebar"] {
-    background-color: rgba(18, 20, 26, 0.6) !important;
-    backdrop-filter: blur(12px) !important;
-}
+    /* --------------------------------------------------
+       2. OPTIMIZACIÓN TÁCTIL / MOBILE-FIRST
+       -------------------------------------------------- */
+    /* Relleno cómodo en pantallas chicas */
+    .block-container {{
+        padding-top: 1.5rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+    }}
 
-header[data-testid="stHeader"]{
-    background: transparent !important;
-}
+    /* Botones grandes y fáciles de tocar con el pulgar */
+    .stButton > button {{
+        width: 100% !important;
+        height: 3.2rem !important;
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+    }}
 
-div[data-testid="stImage"] {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin-bottom: 25px !important;
-}
+    /* Evita que los iPhone / Android hagan zoom al tocar para escribir */
+    .stTextInput input, .stTextArea textarea {{
+        font-size: 16px !important;
+        border-radius: 10px !important;
+    }}
 
-div[data-testid="stImage"] img {
-    background: rgba(20, 20, 35, 0.6) !important;
-    border-radius: 24px !important;
-    padding: 15px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
-    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
-    transition: all 0.3s ease !important;
-    object-fit: contain !important;
-    max-width: 210px !important;
-    width: 100% !important;
-    height: auto !important;
-    display: block !important;
-    margin: 0 auto !important;
-}
-
-div[data-testid="stImage"] img:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
-}
-
-.glass {
-    background: rgba(255,255,255,0.055);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 22px;
-    padding: 22px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 15px 50px rgba(0,0,0,0.18);
-}
-
-.stButton > button {
-    width: 100%;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.07);
-    color: white;
-    font-weight: 600;
-    padding: 10px 16px;
-    transition: 0.2s;
-}
-
-.stButton > button:hover {
-    background: rgba(255,255,255,0.13);
-    border-color: rgba(255,255,255,0.25);
-    transform: translateY(-1px);
-}
-
-[data-testid="stChatMessage"] {
-    background: rgba(255,255,255,0.045);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 18px;
-    margin-bottom: 10px;
-}
-
-[data-testid="stChatInput"] {
-    border-radius: 18px;
-}
-
-.footer {
-    text-align: center;
-    color: #737b91;
-    font-size: 13px;
-    padding: 30px 0 10px 0;
-}
-
-.small {
-    color: #8e96aa;
-    font-size: 13px;
-}
-</style>
+    /* Ajuste del sidebar en celular para que no ocupe todo el ancho */
+    @media (max-width: 768px) {{
+        section[data-testid="stSidebar"] {{
+            width: 82vw !important;
+        }}
+        header {{
+            background: transparent !important;
+        }}
+    }}
+    </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
