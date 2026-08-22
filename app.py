@@ -76,39 +76,6 @@ div[data-testid="stImage"] {
     margin-bottom: 25px !important;
 }
 
-/* 1. Ancho cómodo y centrado en PC */
-.block-container {
-    max-width: 800px !important;
-    padding-top: 2rem !important;
-}
-
-/* 2. Definición de la animación de colores */
-@keyframes geminiGlow {
-    0% {
-        border-color: rgba(120, 80, 255, 0.5) !important;
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.25) !important;
-    }
-    50% {
-        border-color: rgba(0, 200, 255, 0.8) !important;
-        box-shadow: 0 0 25px rgba(0, 200, 255, 0.4) !important;
-    }
-    100% {
-        border-color: rgba(120, 80, 255, 0.5) !important;
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.25) !important;
-    }
-}
-
-/* 3. Selector universal de mensajes de la IA en Streamlit */
-div[data-testid="stChatMessage"]:nth-child(even),
-div[aria-label="Chat message from assistant"] {
-    background: rgba(15, 18, 32, 0.8) !important;
-    border: 1px solid rgba(120, 80, 255, 0.4) !important;
-    border-radius: 20px !important;
-    backdrop-filter: blur(16px) !important;
-    animation: geminiGlow 3s infinite ease-in-out !important;
-}
-
-
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
@@ -256,7 +223,7 @@ if client is None:
 # SIDEBAR (HISTORIAL Y NUEVO CHAT)
 # =========================================================
 with st.sidebar:
-    st.title("Santi IA ⚡")
+    st.title_imaguen("Santi IA ⚡")
     
     if st.button("➕ Nuevo chat", use_container_width=True):
         st.session_state.current_chat_id = None
