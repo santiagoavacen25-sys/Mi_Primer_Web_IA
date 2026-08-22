@@ -43,7 +43,7 @@ st.markdown("""
 /* 1. DESACTIVAR EL SCROLL AUTOMÁTICO */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    scroll-behavior: auto !important; /* Cambiado de smooth a auto */
+    scroll-behavior: auto !important;
 }
 
 .stApp {
@@ -58,7 +58,7 @@ html, body, [class*="css"] {
 .block-container {
     padding-top: 2rem !important; 
     padding-bottom: 3rem !important;
-    max-width: 800px !important; /* Ajustado a 800px para centrar la lectura */
+    max-width: 800px !important;
 }
 
 section[data-testid="stSidebar"] {
@@ -198,19 +198,6 @@ div[data-testid="stChatMessage"]:nth-child(even) {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# CONTROL DE AUTO-SCROLL CON JAVASCRIPT
-# =========================================================
-# Evita que la página se baje sola al responder la IA
-components.html("""
-<script>
-    const main = window.parent.document.querySelector('.main');
-    if (main) {
-        main.scrollTop = main.scrollTop;
-    }
-</script>
-""", height=0)
-
-# =========================================================
 # GROQ CONEXIÓN
 # =========================================================
 try:
@@ -232,8 +219,6 @@ if "messages" not in st.session_state:
 
 # MODELO ACTIVO EN GROQ
 st.session_state.model = "openai/gpt-oss-20b"
-
-
 
 # =========================================================
 # LOGO Y CABECERA
@@ -324,7 +309,20 @@ if pregunta:
         st.markdown(pregunta)
 
     with st.chat_message("assistant", avatar="⚡"):
-        # 1. Creamos el espacio estático sin spinner
+        # INYECCIÓN JS: Bloquea el auto-scroll justo cuando se crea el mensaje de la IA
+        components.html("""
+        <script>
+            const mainContainer = window.parent.document.querySelector('.main');
+            if (mainContainer) {
+                const targetPosition = mainContainer.scrollTop;
+                const freezeScroll = setInterval(() => {
+                    mainContainer.scrollTop = targetPosition;
+                }, 10);
+                setTimeout(() => clearInterval(freezeScroll), 1200);
+            }
+        </script>
+        """, height=0)
+
         area_respuesta = st.empty()
         
         try:
@@ -345,7 +343,6 @@ if pregunta:
 
             texto = respuesta.choices[0].message.content
             
-            # 2. Dibujamos el texto dentro del área fija
             area_respuesta.markdown(texto)
 
             st.session_state.messages.append({
