@@ -4,119 +4,244 @@ import time
 import streamlit as st
 from groq import Groq
 
-# ------------------------------------------------------------------
-# 1.  CONSTANTES Y CONFIGURACIÓN
-# ------------------------------------------------------------------
+# =========================================================
+# ARCHIVO DE HISTORIAL
+# =========================================================
 ARCHIVO_CHATS = "chats_guardados.json"
-MODEL_DEFAULT = "openai/gpt-oss-20b"          # <‑‑ Cambia por "openai/gpt-4o-mini" si tu plan lo permite
-MAX_TOKENS = 8000                            # Límite de Groq “on_demand”
-MAX_RESPUESTA = 1500                         # Tokens que la IA puede devolver
-MAX_HISTORIA = 5                             # Últimos N mensajes que se envían al modelo
 
-# ------------------------------------------------------------------
-# 2.  CARGAR Y GUARDAR HISTORIAL
-# ------------------------------------------------------------------
 def cargar_todos_los_chats():
-    return json.load(open(ARCHIVO_CHATS, "r", encoding="utf-8")) if os.path.exists(ARCHIVO_CHATS) else {}
+    if os.path.exists(ARCHIVO_CHATS):
+        try:
+            with open(ARCHIVO_CHATS, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
 
 def guardar_todos_los_chats(chats):
-    json.dump(chats, open(ARCHIVO_CHATS, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    with open(ARCHIVO_CHATS, "w", encoding="utf-8") as f:
+        json.dump(chats, f, ensure_ascii=False, indent=2)
 
-# ------------------------------------------------------------------
-# 3.  ESTIMAR TOKENS (tiktoken)
-# ------------------------------------------------------------------
-def obtener_tokens(texto: str, model: str = MODEL_DEFAULT) -> int:
-    """Devuelve una estimación de tokens para un texto dado."""
-    enc = tiktoken.encoding_for_model(model)
-    return len(enc.encode(texto))
-
-def truncar_conversacion(messages, max_tokens=MAX_TOKENS, model=MODEL_DEFAULT):
-    """
-    Recorta la conversación hasta que la suma de tokens quede por debajo
-    de `max_tokens`. Se mantiene el mensaje del sistema y los últimos N
-    mensajes de la conversación.
-    """
-    # Mensaje del sistema
-    system_msg = {
-        "role": "system",
-        "content": (
-            "Eres Santi AI, un asistente amigable, claro y útil.\n\n"
-            "Responde en español salvo que el usuario pida otro idioma.\n\n"
-            "Explica las cosas de forma sencilla cuando el usuario sea principiante."
-        )
-    }
-
-    # Tomar solo los últimos MAX_HISTORIA mensajes del usuario/IA
-    recent = messages[-MAX_HISTORIA:]
-
-    # Construir la lista completa
-    msgs = [system_msg] + recent
-
-    # Contar tokens y recortar si es necesario
-    total = sum(obtener_tokens(m["content"], model) for m in msgs)
-    while total > max_tokens and len(recent) > 1:
-        # Eliminar el mensaje más antiguo (el primero de la lista de recientes)
-        removed = recent.pop(0)
-        total -= obtener_tokens(removed["content"], model)
-
-    return msgs
-
-# ------------------------------------------------------------------
-# 4.  CONFIGURACIÓN DE STREAMLIT
-# ------------------------------------------------------------------
+# =========================================================
+# CONFIGURACIÓN DE PÁGINA
+# =========================================================
 st.set_page_config(
     page_title="Santi AI",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
 )
 
-# Estilos CSS (igual que antes, sin cambios)
-st.markdown(
-    """
-    <style>
-    /* ... (copia todo tu bloque CSS) ... */
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# =========================================================
+# ESTILOS CSS
+# =========================================================
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-# ------------------------------------------------------------------
-# 5.  CONEXIÓN CON GROQ
-# ------------------------------------------------------------------
+/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO GLOBAL */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: auto !important;
+}
+
+
+.stApp {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
+        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
+    color: white;
+}
+
+/* 2. ANCHO CÓMODO EN PC Y ESPACIO INFERIOR */
+.block-container {
+    padding-top: 2rem !important; 
+    padding-bottom: 7rem !important;
+    max-width: 800px !important;
+}
+
+/* 3. SIDEBAR Y HEADER */
+section[data-testid="stSidebar"] {
+    background-color: rgba(18, 20, 26, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+header[data-testid="stHeader"]{
+    background: transparent !important;
+}
+
+/* 4. IMAGEN Y LOGO */
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 25px !important;
+}
+
+div[data-testid="stImage"] img {
+    background: rgba(20, 20, 35, 0.6) !important;
+    border-radius: 24px !important;
+    padding: 15px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+    box-shadow: 0 0 25px rgba(120, 80, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    object-fit: contain !important;
+    max-width: 210px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+div[data-testid="stImage"] img:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
+}
+
+/* LOGO EN BOTÓN SIDEBAR */
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stHeaderCollapsedControl"] {
+    background-image: url("tu_logo.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    mix-blend-mode: screen !important;
+    width: 38px !important;
+    height: 38px !important;
+    border: none !important;
+}
+
+/* 5. TEXTO DE BIENVENIDA Y BOTONES */
+.welcome {
+    text-align: center;
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.welcome h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #8e96aa;
+    font-size: 15px;
+}
+
+.stButton > button {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    color: white;
+    font-weight: 600;
+    padding: 10px 16px;
+    transition: 0.2s;
+}
+
+.stButton > button:hover {
+    background: rgba(255,255,255,0.13);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-1px);
+}
+
+/* 6. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
+@keyframes geminiGlow {
+    0% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+    50% {
+        border-color: rgba(0, 200, 255, 0.6);
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
+    }
+    100% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+}
+
+/* BURBUJAS DE MENSAJES */
+div[data-testid="stChatMessage"] {
+    background: rgba(255, 255, 255, 0.045) !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 18px !important;
+    margin-bottom: 10px !important;
+}
+
+/* BURBUJAS DE LA IA CON EFECTO DE LUZ */
+div[data-testid="stChatMessage"]:nth-child(even) {
+    background: rgba(15, 18, 30, 0.75) !important;
+    border: 1px solid rgba(120, 80, 255, 0.3) !important;
+    backdrop-filter: blur(16px) !important;
+    animation: geminiGlow 4s infinite ease-in-out !important;
+}
+
+/* 7. FIJAR LA POSICIÓN DEL INPUT EN LA PARTE INFERIOR */
+div[data-testid="stChatInput"] {
+    position: sticky !important;
+    bottom: 20px !important;
+    z-index: 999 !important;
+    background: rgba(11, 16, 32, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+}
+
+.footer {
+    text-align: center;
+    color: #737b91;
+    font-size: 13px;
+    padding: 30px 0 10px 0;
+}
+
+/* AJUSTE MÓVIL */
+@media (max-width: 768px) {
+    .stTextInput input, .stTextArea textarea {
+        font-size: 16px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+
+# =========================================================
+# GROQ CONEXIÓN
+# =========================================================
 try:
     api_key = st.secrets["GROQ_API_KEY"]
     client = Groq(api_key=api_key)
 except Exception:
     client = None
 
-if client is None:
-    st.error("⚠️ La IA todavía no está configurada.")
-    st.info("Configura GROQ_API_KEY en los Secrets de Streamlit.")
-    st.stop()
-
-# ------------------------------------------------------------------
-# 6.  SESSION STATE
-# ------------------------------------------------------------------
+# =========================================================
+# SESSION STATE E HISTORIAL
+# =========================================================
 todos_los_chats = cargar_todos_los_chats()
 
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-st.session_state.model = MODEL_DEFAULT   # Puedes cambiarlo dinámicamente
+# MODELO ACTIVO EN GROQ
+st.session_state.model = "openai/gpt-oss-20b"
 
-# ------------------------------------------------------------------
-# 7.  LOGO Y CABECERA
-# ------------------------------------------------------------------
+# =========================================================
+# LOGO Y CABECERA
+# =========================================================
 if os.path.exists("Logo.jpeg"):
     st.image("Logo.jpeg", use_container_width=False)
 
-st.markdown(
-    """
-    <div class="welcome">
-        <h2>¿En qué puedo ayudarte hoy?</h2
+st.markdown("""
+<div class="welcome">
+    <h2>¿En qué puedo ayudarte hoy?</h2>
     <p>
         Pregúntame sobre programación, tecnología,
         videojuegos, aprendizaje o cualquier otra cosa.
@@ -241,7 +366,7 @@ cuando el usuario sea principiante.
 
             # Solo enviamos los últimos 10 mensajes
             mensajes.extend(
-                st.session_state.messages[-6:]
+                st.session_state.messages[-10:]
             )
 
             # ==============================
@@ -252,7 +377,7 @@ cuando el usuario sea principiante.
                 model=st.session_state.model,
                 messages=mensajes,
                 temperature=0.7,
-                max_tokens=1500
+                max_tokens=2048
             )
 
             # ==============================
@@ -264,7 +389,7 @@ cuando el usuario sea principiante.
             area_respuesta.markdown(texto)
 
             # Intentar colocar la respuesta arriba
-         
+            colocar_respuesta_arriba()
 
             # ==============================
             # GUARDAR RESPUESTA
