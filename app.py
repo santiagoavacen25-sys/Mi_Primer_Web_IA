@@ -3,7 +3,6 @@ import os
 import time
 import streamlit as st
 from groq import Groq
-import streamlit.components.v1 as components
 
 # =========================================================
 # ARCHIVO DE HISTORIAL
@@ -40,9 +39,15 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-html, body, [class*="css"] {
+/* 1. DESACTIVAR EL DESPLAZAMIENTO AUTOMÁTICO (SCROLL ANCHORING) */
+html, body {
+    overflow-anchor: none !important;
+    scroll-behavior: auto !important;
     font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    overflow-anchor: none !important;
 }
 
 .stApp {
@@ -55,7 +60,7 @@ html, body, [class*="css"] {
 
 .block-container {
     padding-top: 2rem !important; 
-    padding-bottom: 3rem !important;
+    padding-bottom: 5rem !important;
     max-width: 1100px;
 }
 
@@ -158,19 +163,6 @@ div[data-testid="stImage"] img:hover {
 """, unsafe_allow_html=True)
 
 # =========================================================
-# CONTROL DE AUTO-SCROLL CON JAVASCRIPT
-# =========================================================
-# Evita que la página se baje sola al responder la IA
-components.html("""
-<script>
-    const main = window.parent.document.querySelector('.main');
-    if (main) {
-        main.scrollTop = main.scrollTop;
-    }
-</script>
-""", height=0)
-
-# =========================================================
 # GROQ CONEXIÓN
 # =========================================================
 try:
@@ -190,9 +182,8 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# MODELO ACTIVO EN GROQ
-
-st.session_state.model = "mixtral-8x7b-32768"
+# MODELO OFICIAL VIGENTE EN GROQ
+st.session_state.model = "llama-3.3-70b-versatile"
 
 # =========================================================
 # LOGO Y CABECERA
@@ -313,8 +304,6 @@ if pregunta:
                     "messages": st.session_state.messages
                 }
                 guardar_todos_los_chats(todos_los_chats)
-                
-                # NOTA: Se removió st.rerun() para que la pantalla no salte hacia el fondo al terminar de escribir.
 
         except Exception as e:
             st.error("❌ Ocurrió un error al conectar con la IA.")
