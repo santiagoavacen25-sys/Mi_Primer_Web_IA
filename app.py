@@ -104,6 +104,23 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 15px 50px rgba(0,0,0,0.18);
 }
 
+.welcome {
+    text-align: center;
+    padding: 25px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #8e96aa;
+    font-size: 15px;
+}
+
 .stButton > button {
     width: 100%;
     border-radius: 14px;
@@ -173,6 +190,17 @@ st.session_state.model = "openai/gpt-oss-20b"
 # LOGO Y CABECERA
 # =========================================================
 st.image("Logo.jpeg", use_container_width=False)
+
+st.markdown("""
+<div class="welcome">
+    <h2>¿En qué puedo ayudarte hoy?</h2>
+    <p>
+        Pregúntame sobre programación, tecnología,
+        videojuegos, aprendizaje o cualquier otra cosa.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
 
 # =========================================================
 # COMPROBAR API
