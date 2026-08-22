@@ -76,35 +76,36 @@ div[data-testid="stImage"] {
     margin-bottom: 25px !important;
 }
 
-/* 1. Ajuste para que el texto en PC no se vea tan lejos/ancho */
+/* 1. Ancho cómodo y centrado en PC */
 .block-container {
-    max-width: 800px !important; /* Mantiene la lectura centrada y cómoda */
-    padding-top: 1.5rem !important;
+    max-width: 800px !important;
+    padding-top: 2rem !important;
 }
 
-/* 2. Animación de colores de luz estilo Gemini */
+/* 2. Definición de la animación de colores */
 @keyframes geminiGlow {
     0% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+        border-color: rgba(120, 80, 255, 0.5) !important;
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.25) !important;
     }
     50% {
-        border-color: rgba(0, 200, 255, 0.6);
-        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
+        border-color: rgba(0, 200, 255, 0.8) !important;
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.4) !important;
     }
     100% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+        border-color: rgba(120, 80, 255, 0.5) !important;
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.25) !important;
     }
 }
 
-/* Aplicar la animación a las burbujas de la IA */
-[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]),
-[data-testid="stChatMessage"]:nth-child(even) {
-    background: rgba(15, 18, 30, 0.75) !important;
-    border: 1px solid rgba(120, 80, 255, 0.3) !important;
+/* 3. Selector universal de mensajes de la IA en Streamlit */
+div[data-testid="stChatMessage"]:nth-child(even),
+div[aria-label="Chat message from assistant"] {
+    background: rgba(15, 18, 32, 0.8) !important;
+    border: 1px solid rgba(120, 80, 255, 0.4) !important;
+    border-radius: 20px !important;
     backdrop-filter: blur(16px) !important;
-    animation: geminiGlow 4s infinite ease-in-out !important;
+    animation: geminiGlow 3s infinite ease-in-out !important;
 }
 
 
