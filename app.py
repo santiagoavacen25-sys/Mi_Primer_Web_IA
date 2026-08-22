@@ -208,6 +208,35 @@ div[data-testid="stChatInput"] {
 """, unsafe_allow_html=True)
 
 # =========================================================
+# FUNCIÓN PARA POSICIONAR LA RESPUESTA
+# =========================================================
+
+def colocar_respuesta_arriba():
+    st.markdown("""
+    <script>
+    setTimeout(function() {
+
+        const mensajes = window.parent.document.querySelectorAll(
+            '[data-testid="stChatMessage"]'
+        );
+
+        if (mensajes.length > 0) {
+
+            const ultimaRespuesta = mensajes[mensajes.length - 1];
+
+            ultimaRespuesta.scrollIntoView({
+                behavior: "instant",
+                block: "start"
+            });
+
+        }
+
+    }, 300);
+    </script>
+    """, unsafe_allow_html=True)
+
+
+# =========================================================
 # GROQ CONEXIÓN
 # =========================================================
 try:
@@ -302,45 +331,73 @@ for message in st.session_state.messages:
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
-st.markdown("""
-<script>
-function guardarScroll() {
-    sessionStorage.setItem("santi_scroll", window.scrollY);
-}
-
-window.addEventListener("beforeunload", guardarScroll);
-</script>
-""", unsafe_allow_html=True)
-
 
 if pregunta:
+
     if st.session_state.current_chat_id is None:
         st.session_state.current_chat_id = str(int(time.time()))
         titulo_chat = pregunta[:30] if len(pregunta) > 30 else pregunta
     else:
-        chat_actual = todos_los_chats.get(st.session_state.current_chat_id, {})
-        titulo_chat = chat_actual.get("titulo", pregunta[:30])
+        chat_actual = todos_los_chats.get(
+            st.session_state.current_chat_id,
+            {}
+        )
+        titulo_chat = chat_actual.get(
+            "titulo",
+            pregunta[:30]
+        )
+
+    # ==============================
+    # GUARDAR MENSAJE DEL USUARIO
+    # ==============================
 
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
     })
 
+    # ==============================
+    # MOSTRAR MENSAJE DEL USUARIO
+    # ==============================
+
     with st.chat_message("user", avatar="🧑"):
         st.markdown(pregunta)
 
+    # ==============================
+    # RESPUESTA DE LA IA
+    # ==============================
+
     with st.chat_message("assistant", avatar="⚡"):
-        
+
         area_respuesta = st.empty()
-        
+
         try:
+
+            # Mensaje del sistema
             mensajes = [
                 {
                     "role": "system",
-                    "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
+                    "content": """
+Eres Santi AI, un asistente amigable,
+claro y útil.
+
+Responde en español salvo que
+el usuario pida otro idioma.
+
+Explica las cosas de forma sencilla
+cuando el usuario sea principiante.
+"""
                 }
             ]
-            mensajes.extend(st.session_state.messages[-10:])
+
+            # Solo enviamos los últimos 10 mensajes
+            mensajes.extend(
+                st.session_state.messages[-10:]
+            )
+
+            # ==============================
+            # LLAMADA A GROQ
+            # ==============================
 
             respuesta = client.chat.completions.create(
                 model=st.session_state.model,
@@ -349,30 +406,55 @@ if pregunta:
                 max_tokens=2048
             )
 
+            # ==============================
+            # OBTENER RESPUESTA
+            # ==============================
+
             texto = respuesta.choices[0].message.content
-            
+
             area_respuesta.markdown(texto)
+
+            # Intentar colocar la respuesta arriba
+            colocar_respuesta_arriba()
+
+            # ==============================
+            # GUARDAR RESPUESTA
+            # ==============================
 
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": texto
             })
 
-            todos_los_chats[st.session_state.current_chat_id] = {
+            # ==============================
+            # GUARDAR CHAT
+            # ==============================
+
+            todos_los_chats[
+                st.session_state.current_chat_id
+            ] = {
                 "titulo": titulo_chat,
                 "messages": st.session_state.messages
             }
-            guardar_todos_los_chats(todos_los_chats)
+
+            guardar_todos_los_chats(
+                todos_los_chats
+            )
 
         except Exception as e:
-            area_respuesta.error("❌ Ocurrió un error al conectar con la IA.")
+
+            area_respuesta.error(
+                "❌ Ocurrió un error al conectar con la IA."
+            )
+
             st.code(str(e))
 
 # =========================================================
 # FOOTER
 # =========================================================
+
 st.markdown("""
 <div class="footer">
-Santi IA ⚡ · Python + Streamlit + Groq
+    Santi IA ⚡ · Python + Streamlit + Groq
 </div>
 """, unsafe_allow_html=True)
