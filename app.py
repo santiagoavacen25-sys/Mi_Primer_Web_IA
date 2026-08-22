@@ -40,9 +40,10 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth !important;
+    scroll-behavior: auto !important; /* Cambiado de smooth a auto */
 }
 
 .stApp {
@@ -53,10 +54,11 @@ html, body, [class*="css"] {
     color: white;
 }
 
+/* 2. ANCHO CÓMODO EN PC */
 .block-container {
     padding-top: 2rem !important; 
     padding-bottom: 3rem !important;
-    max-width: 1100px;
+    max-width: 800px !important; /* Ajustado a 800px para centrar la lectura */
 }
 
 section[data-testid="stSidebar"] {
@@ -103,44 +105,6 @@ div[data-testid="stImage"] img:hover {
     margin-bottom: 20px;
 }
 
-/* Corrección para evitar el salto automático de pantalla */
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-    scroll-behavior: auto !important; /* Desactiva el scroll forzado */
-}
-
-/* 1. Ancho centrado en PC para lectura cómoda */
-.block-container {
-    padding-top: 2rem !important; 
-    padding-bottom: 3rem !important;
-    max-width: 800px !important; /* Cambiado de 1100px a 800px para que no se vea tan lejos */
-}
-
-/* 2. Animación de resplandor estilo Gemini */
-@keyframes geminiGlow {
-    0% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
-    }
-    50% {
-        border-color: rgba(0, 200, 255, 0.6);
-        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
-    }
-    100% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
-    }
-}
-
-/* 3. Aplicar el resplandor a los mensajes de la IA */
-div[data-testid="stChatMessage"]:nth-child(even) {
-    background: rgba(15, 18, 30, 0.75) !important;
-    border: 1px solid rgba(120, 80, 255, 0.3) !important;
-    backdrop-filter: blur(16px) !important;
-    animation: geminiGlow 4s infinite ease-in-out !important;
-}
-
-
 .welcome h2 {
     font-size: 28px;
     margin-bottom: 8px;
@@ -168,11 +132,49 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     transform: translateY(-1px);
 }
 
-[data-testid="stChatMessage"] {
-    background: rgba(255,255,255,0.045);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 18px;
-    margin-bottom: 10px;
+/* LOGO EN BOTÓN SIDEBAR */
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stHeaderCollapsedControl"] {
+    background-image: url("tu_logo.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    mix-blend-mode: screen !important;
+    width: 38px !important;
+    height: 38px !important;
+    border: none !important;
+}
+
+/* 3. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
+@keyframes geminiGlow {
+    0% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+    50% {
+        border-color: rgba(0, 200, 255, 0.6);
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
+    }
+    100% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+}
+
+/* BURBUJAS DE MENSAJES */
+div[data-testid="stChatMessage"] {
+    background: rgba(255, 255, 255, 0.045) !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 18px !important;
+    margin-bottom: 10px !important;
+}
+
+/* BURBUJAS DE LA IA CON EFECTO DE LUZ */
+div[data-testid="stChatMessage"]:nth-child(even) {
+    background: rgba(15, 18, 30, 0.75) !important;
+    border: 1px solid rgba(120, 80, 255, 0.3) !important;
+    backdrop-filter: blur(16px) !important;
+    animation: geminiGlow 4s infinite ease-in-out !important;
 }
 
 [data-testid="stChatInput"] {
@@ -186,7 +188,7 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     padding: 30px 0 10px 0;
 }
 
-/* Ajuste móvil */
+/* AJUSTE MÓVIL */
 @media (max-width: 768px) {
     .stTextInput input, .stTextArea textarea {
         font-size: 16px !important;
