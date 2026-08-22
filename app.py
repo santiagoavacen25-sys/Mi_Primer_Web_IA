@@ -284,41 +284,43 @@ if pregunta:
         st.markdown(pregunta)
 
     with st.chat_message("assistant", avatar="⚡"):
+        # 1. Creamos el espacio estático sin spinner
+        area_respuesta = st.empty()
+        
         try:
-            with st.spinner("Pensando..."):
-                mensajes = [
-                    {
-                        "role": "system",
-                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
-                    }
-                ]
-                mensajes.extend(st.session_state.messages)
-
-                respuesta = client.chat.completions.create(
-                    model=st.session_state.model,
-                    messages=mensajes,
-                    temperature=0.7,
-                    max_tokens=2048
-                )
-
-                texto = respuesta.choices[0].message.content
-                st.markdown(texto)
-
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": texto
-                })
-
-                todos_los_chats[st.session_state.current_chat_id] = {
-                    "titulo": titulo_chat,
-                    "messages": st.session_state.messages
+            mensajes = [
+                {
+                    "role": "system",
+                    "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
                 }
-                guardar_todos_los_chats(todos_los_chats)
-                
-                # NOTA: Se removió st.rerun() para que la pantalla no salte hacia el fondo al terminar de escribir.
+            ]
+            mensajes.extend(st.session_state.messages)
+
+            respuesta = client.chat.completions.create(
+                model=st.session_state.model,
+                messages=mensajes,
+                temperature=0.7,
+                max_tokens=2048
+            )
+
+            texto = respuesta.choices[0].message.content
+            
+            # 2. Dibujamos el texto dentro del área fija
+            area_respuesta.markdown(texto)
+
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": texto
+            })
+
+            todos_los_chats[st.session_state.current_chat_id] = {
+                "titulo": titulo_chat,
+                "messages": st.session_state.messages
+            }
+            guardar_todos_los_chats(todos_los_chats)
 
         except Exception as e:
-            st.error("❌ Ocurrió un error al conectar con la IA.")
+            area_respuesta.error("❌ Ocurrió un error al conectar con la IA.")
             st.code(str(e))
 
 # =========================================================
