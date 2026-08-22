@@ -78,6 +78,39 @@ div[data-testid="stImage"] {
     margin-bottom: 25px !important;
 }
 
+/* 1. ANULAR EL SCROLL DEL CONTENEDOR PRINCIPAL DE STREAMLIT */
+section.main {
+    overflow: hidden !important;
+}
+
+.stApp {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
+        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
+    color: white;
+    height: 100vh !important;
+    overflow-y: auto !important; /* El scroll lo maneja la app entera, no el viewport */
+}
+
+/* 2. FIJAR LA POSICIÓN DEL CHAT INPUT EN LA PARTE INFERIOR */
+div[data-testid="stChatInput"] {
+    position: sticky !important;
+    bottom: 20px !important;
+    z-index: 999 !important;
+    background: rgba(11, 16, 32, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+}
+
+/* 3. LIMITAR EL ANCHO Y MANTENER EL FOCO DE LECTURA */
+.block-container {
+    padding-top: 2rem !important; 
+    padding-bottom: 7rem !important; /* Espacio extra para que el chat input no tape el último mensaje */
+    max-width: 800px !important;
+}
+
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
