@@ -29,18 +29,22 @@ st.set_page_config(
     page_title="Santi AI",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # =========================================================
-# ESTILOS CSS Y PARCHE JAVASCRIPT (ANTI-AUTO SCROLL)
+# ESTILOS CSS CONGELAR SCROLL (MÓVIL Y PC)
 # =========================================================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+/* BLOQUEO TOTAL DE SCROLL AUTOMÁTICO */
+* {
     overflow-anchor: none !important;
+}
+
+html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     scroll-behavior: auto !important;
     font-family: 'Inter', sans-serif;
 }
@@ -55,12 +59,12 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 
 .block-container {
     padding-top: 2rem !important; 
-    padding-bottom: 5rem !important;
+    padding-bottom: 6rem !important;
     max-width: 1100px;
 }
 
 section[data-testid="stSidebar"] {
-    background-color: rgba(18, 20, 26, 0.8) !important;
+    background-color: rgba(18, 20, 26, 0.95) !important;
     backdrop-filter: blur(12px) !important;
 }
 
@@ -91,11 +95,6 @@ div[data-testid="stImage"] img {
     margin: 0 auto !important;
 }
 
-div[data-testid="stImage"] img:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
-}
-
 .welcome {
     text-align: center;
     padding: 15px;
@@ -124,12 +123,6 @@ div[data-testid="stImage"] img:hover {
     transition: 0.2s;
 }
 
-.stButton > button:hover {
-    background: rgba(255,255,255,0.13);
-    border-color: rgba(255,255,255,0.25);
-    transform: translateY(-1px);
-}
-
 [data-testid="stChatMessage"] {
     background: rgba(255,255,255,0.045);
     border: 1px solid rgba(255,255,255,0.07);
@@ -154,11 +147,6 @@ div[data-testid="stImage"] img:hover {
     }
 }
 </style>
-
-<script>
-// Bloquea las llamadas automáticas de Streamlit para hacer scroll hacia abajo
-Element.prototype.scrollIntoView = function() {};
-</script>
 """, unsafe_allow_html=True)
 
 # =========================================================
@@ -182,7 +170,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # MODELO OFICIAL VIGENTE EN GROQ
-st.session_state.model = "openai/gpt-oss-20b"
+st.session_state.model = "llama-3.3-70b-versatile"
 
 # =========================================================
 # LOGO Y CABECERA
@@ -209,7 +197,7 @@ if client is None:
     st.stop()
 
 # =========================================================
-# SIDEBAR (HISTORIAL Y NUEVO CHAT)
+# SIDEBAR (MENÚ RESTAURADO)
 # =========================================================
 with st.sidebar:
     st.title("⚙️ Menú")
@@ -273,8 +261,11 @@ if pregunta:
         st.markdown(pregunta)
 
     with st.chat_message("assistant", avatar="⚡"):
-        try:
-            with st.spinner("Pensando..."):
+        area_respuesta = st.empty()
+        texto = None
+        
+        with st.spinner("Pensando..."):
+            try:
                 mensajes = [
                     {
                         "role": "system",
@@ -291,22 +282,24 @@ if pregunta:
                 )
 
                 texto = respuesta.choices[0].message.content
-                st.markdown(texto)
 
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": texto
-                })
+            except Exception as e:
+                st.error("❌ Ocurrió un error al conectar con la IA.")
+                st.code(str(e))
 
-                todos_los_chats[st.session_state.current_chat_id] = {
-                    "titulo": titulo_chat,
-                    "messages": st.session_state.messages
-                }
-                guardar_todos_los_chats(todos_los_chats)
+        if texto:
+            area_respuesta.markdown(texto)
 
-        except Exception as e:
-            st.error("❌ Ocurrió un error al conectar con la IA.")
-            st.code(str(e))
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": texto
+            })
+
+            todos_los_chats[st.session_state.current_chat_id] = {
+                "titulo": titulo_chat,
+                "messages": st.session_state.messages
+            }
+            guardar_todos_los_chats(todos_los_chats)
 
 # =========================================================
 # FOOTER
