@@ -40,14 +40,14 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO GLOBAL */
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
+/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO EN EL NAVEGADOR */
+html, body {
+    overflow-anchor: none !important;
     scroll-behavior: auto !important;
 }
 
-section.main {
-    overflow: hidden !important;
+[data-testid="stAppViewContainer"] {
+    overflow-anchor: none !important;
 }
 
 .stApp {
@@ -56,18 +56,15 @@ section.main {
         radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
         linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
     color: white;
-    height: 100vh !important;
-    overflow-y: auto !important;
 }
 
-/* 2. ANCHO CÓMODO EN PC Y ESPACIO INFERIOR */
+/* 2. ANCHO CÓMODO EN PC */
 .block-container {
     padding-top: 2rem !important; 
-    padding-bottom: 7rem !important;
+    padding-bottom: 5rem !important;
     max-width: 800px !important;
 }
 
-/* 3. SIDEBAR Y HEADER */
 section[data-testid="stSidebar"] {
     background-color: rgba(18, 20, 26, 0.8) !important;
     backdrop-filter: blur(12px) !important;
@@ -77,7 +74,6 @@ header[data-testid="stHeader"]{
     background: transparent !important;
 }
 
-/* 4. IMAGEN Y LOGO */
 div[data-testid="stImage"] {
     display: flex !important;
     justify-content: center !important;
@@ -106,20 +102,6 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
-/* LOGO EN BOTÓN SIDEBAR */
-button[data-testid="stSidebarCollapseButton"],
-button[data-testid="stHeaderCollapsedControl"] {
-    background-image: url("tu_logo.png") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    mix-blend-mode: screen !important;
-    width: 38px !important;
-    height: 38px !important;
-    border: none !important;
-}
-
-/* 5. TEXTO DE BIENVENIDA Y BOTONES */
 .welcome {
     text-align: center;
     padding: 15px;
@@ -154,7 +136,20 @@ button[data-testid="stHeaderCollapsedControl"] {
     transform: translateY(-1px);
 }
 
-/* 6. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
+/* LOGO EN BOTÓN SIDEBAR */
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stHeaderCollapsedControl"] {
+    background-image: url("tu_logo.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    mix-blend-mode: screen !important;
+    width: 38px !important;
+    height: 38px !important;
+    border: none !important;
+}
+
+/* 3. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
 @keyframes geminiGlow {
     0% {
         border-color: rgba(120, 80, 255, 0.4);
@@ -186,15 +181,8 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     animation: geminiGlow 4s infinite ease-in-out !important;
 }
 
-/* 7. FIJAR LA POSICIÓN DEL INPUT EN LA PARTE INFERIOR */
-div[data-testid="stChatInput"] {
-    position: sticky !important;
-    bottom: 20px !important;
-    z-index: 999 !important;
-    background: rgba(11, 16, 32, 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+[data-testid="stChatInput"] {
+    border-radius: 18px;
 }
 
 .footer {
