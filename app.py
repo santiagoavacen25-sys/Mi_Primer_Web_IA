@@ -340,7 +340,7 @@ if pregunta:
                     "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
                 }
             ]
-            mensajes.extend(st.session_state.messages)
+            mensajes.extend(st.session_state.messages[-10:])
 
             respuesta = client.chat.completions.create(
                 model=st.session_state.model,
