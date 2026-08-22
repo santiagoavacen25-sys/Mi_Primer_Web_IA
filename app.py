@@ -76,6 +76,38 @@ div[data-testid="stImage"] {
     margin-bottom: 25px !important;
 }
 
+/* 1. Ajuste para que el texto en PC no se vea tan lejos/ancho */
+.block-container {
+    max-width: 800px !important; /* Mantiene la lectura centrada y cómoda */
+    padding-top: 1.5rem !important;
+}
+
+/* 2. Animación de colores de luz estilo Gemini */
+@keyframes geminiGlow {
+    0% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+    50% {
+        border-color: rgba(0, 200, 255, 0.6);
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
+    }
+    100% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+}
+
+/* Aplicar la animación a las burbujas de la IA */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]),
+[data-testid="stChatMessage"]:nth-child(even) {
+    background: rgba(15, 18, 30, 0.75) !important;
+    border: 1px solid rgba(120, 80, 255, 0.3) !important;
+    backdrop-filter: blur(16px) !important;
+    animation: geminiGlow 4s infinite ease-in-out !important;
+}
+
+
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
