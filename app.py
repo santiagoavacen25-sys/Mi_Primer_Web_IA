@@ -3,6 +3,7 @@ import os
 import time
 import streamlit as st
 from groq import Groq
+import streamlit.components.v1 as components
 
 # =========================================================
 # ARCHIVO DE HISTORIAL
@@ -39,12 +40,10 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO GLOBAL */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    scroll-behavior: auto !important;
+    scroll-behavior: smooth !important;
 }
-
 
 .stApp {
     background:
@@ -54,14 +53,12 @@ html, body, [class*="css"] {
     color: white;
 }
 
-/* 2. ANCHO CÓMODO EN PC Y ESPACIO INFERIOR */
 .block-container {
     padding-top: 2rem !important; 
-    padding-bottom: 7rem !important;
-    max-width: 800px !important;
+    padding-bottom: 3rem !important;
+    max-width: 1100px;
 }
 
-/* 3. SIDEBAR Y HEADER */
 section[data-testid="stSidebar"] {
     background-color: rgba(18, 20, 26, 0.8) !important;
     backdrop-filter: blur(12px) !important;
@@ -71,7 +68,6 @@ header[data-testid="stHeader"]{
     background: transparent !important;
 }
 
-/* 4. IMAGEN Y LOGO */
 div[data-testid="stImage"] {
     display: flex !important;
     justify-content: center !important;
@@ -100,20 +96,6 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
-/* LOGO EN BOTÓN SIDEBAR */
-button[data-testid="stSidebarCollapseButton"],
-button[data-testid="stHeaderCollapsedControl"] {
-    background-image: url("tu_logo.png") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    mix-blend-mode: screen !important;
-    width: 38px !important;
-    height: 38px !important;
-    border: none !important;
-}
-
-/* 5. TEXTO DE BIENVENIDA Y BOTONES */
 .welcome {
     text-align: center;
     padding: 15px;
@@ -148,47 +130,15 @@ button[data-testid="stHeaderCollapsedControl"] {
     transform: translateY(-1px);
 }
 
-/* 6. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
-@keyframes geminiGlow {
-    0% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
-    }
-    50% {
-        border-color: rgba(0, 200, 255, 0.6);
-        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
-    }
-    100% {
-        border-color: rgba(120, 80, 255, 0.4);
-        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
-    }
+[data-testid="stChatMessage"] {
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    margin-bottom: 10px;
 }
 
-/* BURBUJAS DE MENSAJES */
-div[data-testid="stChatMessage"] {
-    background: rgba(255, 255, 255, 0.045) !important;
-    border: 1px solid rgba(255, 255, 255, 0.07) !important;
-    border-radius: 18px !important;
-    margin-bottom: 10px !important;
-}
-
-/* BURBUJAS DE LA IA CON EFECTO DE LUZ */
-div[data-testid="stChatMessage"]:nth-child(even) {
-    background: rgba(15, 18, 30, 0.75) !important;
-    border: 1px solid rgba(120, 80, 255, 0.3) !important;
-    backdrop-filter: blur(16px) !important;
-    animation: geminiGlow 4s infinite ease-in-out !important;
-}
-
-/* 7. FIJAR LA POSICIÓN DEL INPUT EN LA PARTE INFERIOR */
-div[data-testid="stChatInput"] {
-    position: sticky !important;
-    bottom: 20px !important;
-    z-index: 999 !important;
-    background: rgba(11, 16, 32, 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
+[data-testid="stChatInput"] {
+    border-radius: 18px;
 }
 
 .footer {
@@ -198,7 +148,7 @@ div[data-testid="stChatInput"] {
     padding: 30px 0 10px 0;
 }
 
-/* AJUSTE MÓVIL */
+/* Ajuste móvil */
 @media (max-width: 768px) {
     .stTextInput input, .stTextArea textarea {
         font-size: 16px !important;
@@ -207,8 +157,18 @@ div[data-testid="stChatInput"] {
 </style>
 """, unsafe_allow_html=True)
 
-
-
+# =========================================================
+# CONTROL DE AUTO-SCROLL CON JAVASCRIPT
+# =========================================================
+# Evita que la página se baje sola al responder la IA
+components.html("""
+<script>
+    const main = window.parent.document.querySelector('.main');
+    if (main) {
+        main.scrollTop = main.scrollTop;
+    }
+</script>
+""", height=0)
 
 # =========================================================
 # GROQ CONEXIÓN
@@ -232,6 +192,8 @@ if "messages" not in st.session_state:
 
 # MODELO ACTIVO EN GROQ
 st.session_state.model = "openai/gpt-oss-20b"
+
+
 
 # =========================================================
 # LOGO Y CABECERA
@@ -305,130 +267,65 @@ for message in st.session_state.messages:
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
 
-
 if pregunta:
-
     if st.session_state.current_chat_id is None:
         st.session_state.current_chat_id = str(int(time.time()))
         titulo_chat = pregunta[:30] if len(pregunta) > 30 else pregunta
     else:
-        chat_actual = todos_los_chats.get(
-            st.session_state.current_chat_id,
-            {}
-        )
-        titulo_chat = chat_actual.get(
-            "titulo",
-            pregunta[:30]
-        )
-
-    # ==============================
-    # GUARDAR MENSAJE DEL USUARIO
-    # ==============================
+        chat_actual = todos_los_chats.get(st.session_state.current_chat_id, {})
+        titulo_chat = chat_actual.get("titulo", pregunta[:30])
 
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
     })
 
-    # ==============================
-    # MOSTRAR MENSAJE DEL USUARIO
-    # ==============================
-
     with st.chat_message("user", avatar="🧑"):
         st.markdown(pregunta)
 
-    # ==============================
-    # RESPUESTA DE LA IA
-    # ==============================
-
     with st.chat_message("assistant", avatar="⚡"):
-
-        area_respuesta = st.empty()
-
         try:
+            with st.spinner("Pensando..."):
+                mensajes = [
+                    {
+                        "role": "system",
+                        "content": "Eres Santi AI, un asistente amigable, claro y útil. Responde en español salvo que el usuario pida otro idioma."
+                    }
+                ]
+                mensajes.extend(st.session_state.messages)
 
-            # Mensaje del sistema
-            mensajes = [
-                {
-                    "role": "system",
-                    "content": """
-Eres Santi AI, un asistente amigable,
-claro y útil.
+                respuesta = client.chat.completions.create(
+                    model=st.session_state.model,
+                    messages=mensajes,
+                    temperature=0.7,
+                    max_tokens=2048
+                )
 
-Responde en español salvo que
-el usuario pida otro idioma.
+                texto = respuesta.choices[0].message.content
+                st.markdown(texto)
 
-Explica las cosas de forma sencilla
-cuando el usuario sea principiante.
-"""
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": texto
+                })
+
+                todos_los_chats[st.session_state.current_chat_id] = {
+                    "titulo": titulo_chat,
+                    "messages": st.session_state.messages
                 }
-            ]
-
-            # Solo enviamos los últimos 10 mensajes
-            mensajes.extend(
-                st.session_state.messages[-10:]
-            )
-
-            # ==============================
-            # LLAMADA A GROQ
-            # ==============================
-
-            respuesta = client.chat.completions.create(
-                model=st.session_state.model,
-                messages=mensajes,
-                temperature=0.7,
-                max_tokens=2048
-            )
-
-            # ==============================
-            # OBTENER RESPUESTA
-            # ==============================
-
-            texto = respuesta.choices[0].message.content
-
-            area_respuesta.markdown(texto)
-
-            # Intentar colocar la respuesta arriba
-            colocar_respuesta_arriba()
-
-            # ==============================
-            # GUARDAR RESPUESTA
-            # ==============================
-
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": texto
-            })
-
-            # ==============================
-            # GUARDAR CHAT
-            # ==============================
-
-            todos_los_chats[
-                st.session_state.current_chat_id
-            ] = {
-                "titulo": titulo_chat,
-                "messages": st.session_state.messages
-            }
-
-            guardar_todos_los_chats(
-                todos_los_chats
-            )
+                guardar_todos_los_chats(todos_los_chats)
+                
+                # NOTA: Se removió st.rerun() para que la pantalla no salte hacia el fondo al terminar de escribir.
 
         except Exception as e:
-
-            area_respuesta.error(
-                "❌ Ocurrió un error al conectar con la IA."
-            )
-
+            st.error("❌ Ocurrió un error al conectar con la IA.")
             st.code(str(e))
 
 # =========================================================
 # FOOTER
 # =========================================================
-
 st.markdown("""
 <div class="footer">
-    Santi IA ⚡ · Python + Streamlit + Groq
+Santi IA ⚡ · Python + Streamlit + Groq
 </div>
 """, unsafe_allow_html=True)
