@@ -192,7 +192,7 @@ if "messages" not in st.session_state:
 
 # MODELO ACTIVO EN GROQ
 
-st.session_state.model = "llama-3.3-70b-specdec"
+st.session_state.model = "llama-3.1-8b-instant"
 
 # =========================================================
 # LOGO Y CABECERA
