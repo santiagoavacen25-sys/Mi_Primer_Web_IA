@@ -191,7 +191,8 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # MODELO ACTIVO EN GROQ
-st.session_state.model = "llama-3.3-70b-versatile"
+
+st.session_state.model = "llama-3.1-8b-instant"
 
 # =========================================================
 # LOGO Y CABECERA
