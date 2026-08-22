@@ -40,45 +40,12 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO */
+/* 1. DESACTIVAR EL SCROLL AUTOMÁTICO GLOBAL */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
     scroll-behavior: auto !important;
 }
 
-.stApp {
-    background:
-        radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(0, 180, 255, 0.12), transparent 30%),
-        linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
-    color: white;
-}
-
-/* 2. ANCHO CÓMODO EN PC */
-.block-container {
-    padding-top: 2rem !important; 
-    padding-bottom: 3rem !important;
-    max-width: 800px !important;
-}
-
-section[data-testid="stSidebar"] {
-    background-color: rgba(18, 20, 26, 0.8) !important;
-    backdrop-filter: blur(12px) !important;
-}
-
-header[data-testid="stHeader"]{
-    background: transparent !important;
-}
-
-div[data-testid="stImage"] {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin-bottom: 25px !important;
-}
-
-/* 1. ANULAR EL SCROLL DEL CONTENEDOR PRINCIPAL DE STREAMLIT */
 section.main {
     overflow: hidden !important;
 }
@@ -90,25 +57,33 @@ section.main {
         linear-gradient(135deg, #070912 0%, #0b1020 50%, #070912 100%);
     color: white;
     height: 100vh !important;
-    overflow-y: auto !important; /* El scroll lo maneja la app entera, no el viewport */
+    overflow-y: auto !important;
 }
 
-/* 2. FIJAR LA POSICIÓN DEL CHAT INPUT EN LA PARTE INFERIOR */
-div[data-testid="stChatInput"] {
-    position: sticky !important;
-    bottom: 20px !important;
-    z-index: 999 !important;
-    background: rgba(11, 16, 32, 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(140, 80, 255, 0.3) !important;
-}
-
-/* 3. LIMITAR EL ANCHO Y MANTENER EL FOCO DE LECTURA */
+/* 2. ANCHO CÓMODO EN PC Y ESPACIO INFERIOR */
 .block-container {
     padding-top: 2rem !important; 
-    padding-bottom: 7rem !important; /* Espacio extra para que el chat input no tape el último mensaje */
+    padding-bottom: 7rem !important;
     max-width: 800px !important;
+}
+
+/* 3. SIDEBAR Y HEADER */
+section[data-testid="stSidebar"] {
+    background-color: rgba(18, 20, 26, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+header[data-testid="stHeader"]{
+    background: transparent !important;
+}
+
+/* 4. IMAGEN Y LOGO */
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 25px !important;
 }
 
 div[data-testid="stImage"] img {
@@ -131,6 +106,20 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
+/* LOGO EN BOTÓN SIDEBAR */
+button[data-testid="stSidebarCollapseButton"],
+button[data-testid="stHeaderCollapsedControl"] {
+    background-image: url("tu_logo.png") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    mix-blend-mode: screen !important;
+    width: 38px !important;
+    height: 38px !important;
+    border: none !important;
+}
+
+/* 5. TEXTO DE BIENVENIDA Y BOTONES */
 .welcome {
     text-align: center;
     padding: 15px;
@@ -165,20 +154,7 @@ div[data-testid="stImage"] img:hover {
     transform: translateY(-1px);
 }
 
-/* LOGO EN BOTÓN SIDEBAR */
-button[data-testid="stSidebarCollapseButton"],
-button[data-testid="stHeaderCollapsedControl"] {
-    background-image: url("tu_logo.png") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-    mix-blend-mode: screen !important;
-    width: 38px !important;
-    height: 38px !important;
-    border: none !important;
-}
-
-/* 3. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
+/* 6. ANIMACIÓN Y RESPLANDOR ESTILO GEMINI */
 @keyframes geminiGlow {
     0% {
         border-color: rgba(120, 80, 255, 0.4);
@@ -210,8 +186,15 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     animation: geminiGlow 4s infinite ease-in-out !important;
 }
 
-[data-testid="stChatInput"] {
-    border-radius: 18px;
+/* 7. FIJAR LA POSICIÓN DEL INPUT EN LA PARTE INFERIOR */
+div[data-testid="stChatInput"] {
+    position: sticky !important;
+    bottom: 20px !important;
+    z-index: 999 !important;
+    background: rgba(11, 16, 32, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(140, 80, 255, 0.3) !important;
 }
 
 .footer {
