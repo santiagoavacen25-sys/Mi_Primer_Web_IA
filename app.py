@@ -223,7 +223,7 @@ if client is None:
 # SIDEBAR (HISTORIAL Y NUEVO CHAT)
 # =========================================================
 with st.sidebar:
-    st.title_imaguen("Santi IA ⚡")
+    st.title("Santi IA ⚡")
     
     if st.button("➕ Nuevo chat", use_container_width=True):
         st.session_state.current_chat_id = None
