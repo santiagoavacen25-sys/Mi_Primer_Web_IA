@@ -59,6 +59,22 @@ html, body, [class*="css"] {
     max-width: 1100px;
 }
 
+const mainContainer = window.parent.document.querySelector('.main');
+                if (mainContainer) {
+                    // Guarda la posición actual de lectura
+                    const currentScroll = mainContainer.scrollTop;
+                    
+                    # Evita que Streamlit baje automáticamente la pantalla
+                    const observer = new MutationObserver(() => {
+                        mainContainer.scrollTop = currentScroll;
+                    });
+                    
+                    observer.observe(mainContainer, { childList: true, subtree: true });
+                    
+                    // Desactiva el bloqueo después de 1 segundo para permitir scroll manual
+                    setTimeout(() => observer.disconnect(), 1000);
+                }
+
 section[data-testid="stSidebar"] {
     background-color: rgba(18, 20, 26, 0.8) !important;
     backdrop-filter: blur(12px) !important;
