@@ -191,8 +191,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # MODELO ACTIVO EN GROQ
-# El más rápido y estable):
-st.session_state.model = "llama-3.1-8b-instant"
+st.session_state.model = "openai/gpt-oss-20b"
 
 
 
