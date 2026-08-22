@@ -3,7 +3,6 @@ import os
 import time
 import streamlit as st
 from groq import Groq
-import streamlit.components.v1 as components
 
 # =========================================================
 # ARCHIVO DE HISTORIAL
@@ -30,7 +29,7 @@ st.set_page_config(
     page_title="Santi AI",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # =========================================================
@@ -42,7 +41,6 @@ st.markdown("""
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth !important;
 }
 
 .stApp {
@@ -54,13 +52,13 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    padding-top: 2rem !important; 
-    padding-bottom: 3rem !important;
+    padding-top: 5rem !important; 
+    padding-bottom: 2rem;
     max-width: 1100px;
 }
 
 section[data-testid="stSidebar"] {
-    background-color: rgba(18, 20, 26, 0.8) !important;
+    background-color: rgba(18, 20, 26, 0.6) !important;
     backdrop-filter: blur(12px) !important;
 }
 
@@ -75,6 +73,29 @@ div[data-testid="stImage"] {
     width: 100% !important;
     margin-bottom: 25px !important;
 }
+
+/* 1. Mantiene el contenedor principal fijo durante la respuesta */
+    .stAppViewContainer {
+        scroll-behavior: smooth !important;
+    }
+    // 2. Intercepta el evento de auto-scroll de Streamlit
+    
+    const observer = new MutationObserver((mutations) => {
+        // Mantiene la posición actual del scroll si el usuario está leyendo
+        const element = window.parent.document.querySelector('.main');
+        if (element && element.scrollTop > 100) {
+            // Previene que se vaya al fondo automáticamente
+            element.style.scrollBehavior = 'auto';
+        }
+    });
+
+    const target = window.parent.document.querySelector('.main');
+    if (target) {
+        observer.observe(target, { childList: true, subtree: true });
+    }
+   
+
+
 
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
@@ -96,15 +117,25 @@ div[data-testid="stImage"] img:hover {
     box-shadow: 0 0 40px rgba(140, 80, 255, 0.6) !important;
 }
 
+.glass {
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    padding: 22px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.18);
+}
+
 .welcome {
     text-align: center;
-    padding: 15px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    padding: 25px;
+    margin-top: 20px;
+    margin-bottom: 25px;
 }
 
 .welcome h2 {
-    font-size: 28px;
+    font-size: 30px;
     margin-bottom: 8px;
 }
 
@@ -148,27 +179,12 @@ div[data-testid="stImage"] img:hover {
     padding: 30px 0 10px 0;
 }
 
-/* Ajuste móvil */
-@media (max-width: 768px) {
-    .stTextInput input, .stTextArea textarea {
-        font-size: 16px !important;
-    }
+.small {
+    color: #8e96aa;
+    font-size: 13px;
 }
 </style>
 """, unsafe_allow_html=True)
-
-# =========================================================
-# CONTROL DE AUTO-SCROLL CON JAVASCRIPT
-# =========================================================
-# Evita que la página se baje sola al responder la IA
-components.html("""
-<script>
-    const main = window.parent.document.querySelector('.main');
-    if (main) {
-        main.scrollTop = main.scrollTop;
-    }
-</script>
-""", height=0)
 
 # =========================================================
 # GROQ CONEXIÓN
@@ -190,16 +206,13 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# MODELO ACTIVO EN GROQ
+# MODELO ACTIVO EN GROQ (ACTUALIZADO)
 st.session_state.model = "openai/gpt-oss-20b"
-
-
 
 # =========================================================
 # LOGO Y CABECERA
 # =========================================================
-if os.path.exists("Logo.jpeg"):
-    st.image("Logo.jpeg", use_container_width=False)
+st.image("Logo.jpeg", use_container_width=False)
 
 st.markdown("""
 <div class="welcome">
@@ -210,6 +223,7 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
 
 # =========================================================
 # COMPROBAR API
@@ -223,7 +237,7 @@ if client is None:
 # SIDEBAR (HISTORIAL Y NUEVO CHAT)
 # =========================================================
 with st.sidebar:
-    st.title("Santi IA ⚡")
+    st.title("⚙️ Menú")
     
     if st.button("➕ Nuevo chat", use_container_width=True):
         st.session_state.current_chat_id = None
@@ -251,6 +265,21 @@ with st.sidebar:
 
     st.divider()
     st.caption("Santi AI ⚡")
+
+# =========================================================
+# PANEL PRINCIPAL
+# =========================================================
+col1, col2, col3 = st.columns(3)
+
+
+
+st.write("")
+
+# =========================================================
+# SUGERENCIAS INICIALES
+# =========================================================
+
+
 
 # =========================================================
 # MOSTRAR MENSAJES EN PANTALLA
@@ -314,8 +343,7 @@ if pregunta:
                     "messages": st.session_state.messages
                 }
                 guardar_todos_los_chats(todos_los_chats)
-                
-                # NOTA: Se removió st.rerun() para que la pantalla no salte hacia el fondo al terminar de escribir.
+                st.rerun()
 
         except Exception as e:
             st.error("❌ Ocurrió un error al conectar con la IA.")
