@@ -3,7 +3,6 @@ import os
 import time
 import streamlit as st
 from groq import Groq
-import tiktoken
 
 # ------------------------------------------------------------------
 # 1.  CONSTANTES Y CONFIGURACIÓN
@@ -265,7 +264,7 @@ cuando el usuario sea principiante.
             area_respuesta.markdown(texto)
 
             # Intentar colocar la respuesta arriba
-            colocar_respuesta_arriba()
+         
 
             # ==============================
             # GUARDAR RESPUESTA
