@@ -190,7 +190,12 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# MODELO ACTIVO EN GROQ (CÁMBIALO AQUÍ)
+st.session_state.model = "llama3-70b-8192"
+
+
 # MODELO ACTIVO EN GROQ
+
 
 st.session_state.model = "llama-3.3-70b-versatile"
 
