@@ -74,29 +74,6 @@ div[data-testid="stImage"] {
     margin-bottom: 25px !important;
 }
 
-/* 1. Mantiene el contenedor principal fijo durante la respuesta */
-    .stAppViewContainer {
-        scroll-behavior: smooth !important;
-    }
-    // 2. Intercepta el evento de auto-scroll de Streamlit
-    
-    const observer = new MutationObserver((mutations) => {
-        // Mantiene la posición actual del scroll si el usuario está leyendo
-        const element = window.parent.document.querySelector('.main');
-        if (element && element.scrollTop > 100) {
-            // Previene que se vaya al fondo automáticamente
-            element.style.scrollBehavior = 'auto';
-        }
-    });
-
-    const target = window.parent.document.querySelector('.main');
-    if (target) {
-        observer.observe(target, { childList: true, subtree: true });
-    }
-   
-
-
-
 div[data-testid="stImage"] img {
     background: rgba(20, 20, 35, 0.6) !important;
     border-radius: 24px !important;
@@ -271,15 +248,50 @@ with st.sidebar:
 # =========================================================
 col1, col2, col3 = st.columns(3)
 
+with col1:
+    st.markdown("""
+<div class="glass">
+<div style="font-size:28px;">🤖</div>
+<h3>Chat con IA</h3>
+<div class="small">Pregunta lo que quieras y recibe respuestas.</div>
+</div>
+""", unsafe_allow_html=True)
 
+with col2:
+    st.markdown("""
+<div class="glass">
+<div style="font-size:28px;">💻</div>
+<h3>Programación</h3>
+<div class="small">Aprende Python, web, APIs y mucho más.</div>
+</div>
+""", unsafe_allow_html=True)
+
+with col3:
+    st.markdown("""
+<div class="glass">
+<div style="font-size:28px;">📚</div>
+<h3>Aprendizaje</h3>
+<div class="small">Explicaciones sencillas paso a paso.</div>
+</div>
+""", unsafe_allow_html=True)
 
 st.write("")
 
 # =========================================================
 # SUGERENCIAS INICIALES
 # =========================================================
-
-
+if len(st.session_state.messages) == 0:
+    st.markdown("""
+<div class="glass">
+<h3>👋 ¿Qué quieres hacer?</h3>
+<p class="small">
+Puedes preguntarme sobre programación,
+videojuegos, tecnología, tareas,
+matemáticas, ideas para proyectos
+o prácticamente cualquier tema.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 # =========================================================
 # MOSTRAR MENSAJES EN PANTALLA
