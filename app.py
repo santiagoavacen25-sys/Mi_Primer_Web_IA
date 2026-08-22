@@ -59,22 +59,6 @@ html, body, [class*="css"] {
     max-width: 1100px;
 }
 
-const mainContainer = window.parent.document.querySelector('.main');
-                if (mainContainer) {
-                    // Guarda la posición actual de lectura
-                    const currentScroll = mainContainer.scrollTop;
-                    
-                    # Evita que Streamlit baje automáticamente la pantalla
-                    const observer = new MutationObserver(() => {
-                        mainContainer.scrollTop = currentScroll;
-                    });
-                    
-                    observer.observe(mainContainer, { childList: true, subtree: true });
-                    
-                    // Desactiva el bloqueo después de 1 segundo para permitir scroll manual
-                    setTimeout(() => observer.disconnect(), 1000);
-                }
-
 section[data-testid="stSidebar"] {
     background-color: rgba(18, 20, 26, 0.8) !important;
     backdrop-filter: blur(12px) !important;
@@ -118,6 +102,44 @@ div[data-testid="stImage"] img:hover {
     margin-top: 10px;
     margin-bottom: 20px;
 }
+
+/* Corrección para evitar el salto automático de pantalla */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: auto !important; /* Desactiva el scroll forzado */
+}
+
+/* 1. Ancho centrado en PC para lectura cómoda */
+.block-container {
+    padding-top: 2rem !important; 
+    padding-bottom: 3rem !important;
+    max-width: 800px !important; /* Cambiado de 1100px a 800px para que no se vea tan lejos */
+}
+
+/* 2. Animación de resplandor estilo Gemini */
+@keyframes geminiGlow {
+    0% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+    50% {
+        border-color: rgba(0, 200, 255, 0.6);
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.35);
+    }
+    100% {
+        border-color: rgba(120, 80, 255, 0.4);
+        box-shadow: 0 0 15px rgba(120, 80, 255, 0.2);
+    }
+}
+
+/* 3. Aplicar el resplandor a los mensajes de la IA */
+div[data-testid="stChatMessage"]:nth-child(even) {
+    background: rgba(15, 18, 30, 0.75) !important;
+    border: 1px solid rgba(120, 80, 255, 0.3) !important;
+    backdrop-filter: blur(16px) !important;
+    animation: geminiGlow 4s infinite ease-in-out !important;
+}
+
 
 .welcome h2 {
     font-size: 28px;
