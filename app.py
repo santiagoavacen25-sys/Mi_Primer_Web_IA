@@ -209,49 +209,6 @@ if client is None:
     st.stop()
 
 # =========================================================
-# SIDEBAR (HISTORIAL Y NUEVO CHAT)
-# =========================================================
-with st.sidebar:
-    st.title("⚙️ Menú")
-    
-    if st.button("➕ Nuevo chat", use_container_width=True):
-        st.session_state.current_chat_id = None
-        st.session_state.messages = []
-        st.rerun()
-
-    st.divider()
-    st.markdown("### 💬 Historial de Chats")
-
-    if todos_los_chats:
-        for chat_id, chat_data in reversed(list(todos_los_chats.items())):
-            titulo = chat_data.get("titulo", "Chat sin título")
-            if len(titulo) > 28:
-                titulo = titulo[:25] + "..."
-            
-            es_activo = (st.session_state.current_chat_id == chat_id)
-            label = f"📌 {titulo}" if es_activo else f"💬 {titulo}"
-            
-            if st.button(label, key=f"chat_{chat_id}", use_container_width=True):
-                st.session_state.current_chat_id = chat_id
-                st.session_state.messages = chat_data.get("messages", [])
-                st.rerun()
-    else:
-        st.caption("Aún no hay chats guardados.")
-
-    st.divider()
-    st.caption("Santi AI ⚡")
-
-# =========================================================
-# MOSTRAR MENSAJES EN PANTALLA
-# =========================================================
-for message in st.session_state.messages:
-    with st.chat_message(
-        message["role"],
-        avatar="🧑" if message["role"] == "user" else "⚡"
-    ):
-        st.markdown(message["content"])
-
-# =========================================================
 # PROCESAR NUEVO MENSAJE Y GUARDADO AUTOMÁTICO
 # =========================================================
 pregunta = st.chat_input("Escribe tu pregunta para Santi IA...")
@@ -264,6 +221,7 @@ if pregunta:
         chat_actual = todos_los_chats.get(st.session_state.current_chat_id, {})
         titulo_chat = chat_actual.get("titulo", pregunta[:30])
 
+    # Guardar y mostrar mensaje del usuario
     st.session_state.messages.append({
         "role": "user",
         "content": pregunta
@@ -272,9 +230,15 @@ if pregunta:
     with st.chat_message("user", avatar="🧑"):
         st.markdown(pregunta)
 
+    # Generar respuesta de la IA
     with st.chat_message("assistant", avatar="⚡"):
-        try:
-            with st.spinner("Pensando..."):
+        # 1. Contenedor vacío para la respuesta
+        area_respuesta = st.empty()
+        texto = None
+        
+        # 2. Spinner solo mientras consulta a Groq
+        with st.spinner("Pensando..."):
+            try:
                 mensajes = [
                     {
                         "role": "system",
@@ -291,22 +255,25 @@ if pregunta:
                 )
 
                 texto = respuesta.choices[0].message.content
-                st.markdown(texto)
 
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": texto
-                })
+            except Exception as e:
+                st.error("❌ Ocurrió un error al conectar con la IA.")
+                st.code(str(e))
 
-                todos_los_chats[st.session_state.current_chat_id] = {
-                    "titulo": titulo_chat,
-                    "messages": st.session_state.messages
-                }
-                guardar_todos_los_chats(todos_los_chats)
+        # 3. Dibujar el texto FUERA del spinner
+        if texto:
+            area_respuesta.markdown(texto)
 
-        except Exception as e:
-            st.error("❌ Ocurrió un error al conectar con la IA.")
-            st.code(str(e))
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": texto
+            })
+
+            todos_los_chats[st.session_state.current_chat_id] = {
+                "titulo": titulo_chat,
+                "messages": st.session_state.messages
+            }
+            guardar_todos_los_chats(todos_los_chats)
 
 # =========================================================
 # FOOTER
